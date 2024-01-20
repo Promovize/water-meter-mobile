@@ -37,6 +37,8 @@ export type User = {
   avatar_url: string;
   full_name: string;
   role: UserRole;
+  email: string;
+  phone: string;
 };
 
 const AuthProvider = (props: Props) => {
@@ -71,7 +73,7 @@ const AuthProvider = (props: Props) => {
 
       const { data, error, status } = await supabase
         .from("profiles")
-        .select(`id, username, website, avatar_url, full_name`)
+        .select(`id, username, website, avatar_url, full_name, email, phone, role`)
         .eq("id", userId)
         .single();
 
@@ -100,8 +102,6 @@ const AuthProvider = (props: Props) => {
     loading,
     session,
   };
-
-  console.log({ profile });
 
   return (
     <AuthContext.Provider value={value}>

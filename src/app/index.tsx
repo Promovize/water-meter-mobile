@@ -10,7 +10,7 @@ const WelcomeScreen = () => {
   const router = useRouter();
 
   return (
-    <View style={[styles.container, {}]}>
+    <View style={styles.container}>
       <View style={styles.wrapper}>
         <View style={styles.logoWrapper}>
           <Image source={require("@/assets/images/logo.png")} style={{ width: 200, height: 200 }} />
@@ -58,6 +58,10 @@ const styles = StyleSheet.create({
     flex: 1,
     position: "relative",
   },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.2)", // change this color and opacity as needed
+  },
   wrapper: {
     flex: 1,
     paddingHorizontal: 20,
@@ -93,7 +97,5 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
   },
-  poweredByText: {
-    fontWeight: "600",
-  },
+  poweredByText: {},
 });
