@@ -9,7 +9,6 @@ import { Route } from "@/constants/Route";
 import { useAuth } from "@/contexts/AuthProvider";
 import LodingContainer from "@/components/LodingContainer";
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: { name: React.ComponentProps<typeof FontAwesome>["name"]; color: string }) {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
@@ -35,14 +34,14 @@ export default function TabLayout() {
       <Tabs.Screen
         name='index'
         options={{
-          title: "Tab One",
-          tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
+          title: "Home",
+          tabBarIcon: ({ color }) => <TabBarIcon name='home' color={color} />,
           headerRight: () => (
             <Link href='/modal' asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
-                    name='info-circle'
+                    name='home'
                     size={25}
                     color={"#000"}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
@@ -54,10 +53,25 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name='two'
+        name='transactions/index'
         options={{
-          title: "Tab Two",
-          tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
+          title: "Transactions",
+          tabBarIcon: ({ color }) => <TabBarIcon name='money' color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name='activities/index'
+        options={{
+          title: "Activity",
+          tabBarIcon: ({ color }) => <TabBarIcon name='history' color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name='profile'
+        options={{
+          title: "Profile",
+          headerShown: false,
+          tabBarIcon: ({ color }) => <TabBarIcon name='user' color={color} />,
         }}
       />
     </Tabs>

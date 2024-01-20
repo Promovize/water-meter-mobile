@@ -25,12 +25,18 @@ type Props = {
   children: React.ReactNode | ((props: AuthContextType) => React.ReactNode);
 };
 
+export enum UserRole {
+  User = "User",
+  Admin = "Admin",
+}
+
 export type User = {
   id: string;
   username: string;
   website: string;
   avatar_url: string;
   full_name: string;
+  role: UserRole;
 };
 
 const AuthProvider = (props: Props) => {

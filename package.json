@@ -18,6 +18,7 @@
     "@react-native-async-storage/async-storage": "1.18.2",
     "@react-navigation/native": "^6.0.2",
     "@supabase/supabase-js": "^2.39.3",
+    "chroma-js": "^2.4.2",
     "expo": "~49.0.18",
     "expo-font": "~11.4.0",
     "expo-image": "~1.3.5",
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@types/chroma-js": "^2.4.3",
     "@types/react": "~18.2.14",
     "babel-plugin-module-resolver": "^5.0.0",
     "jest": "^29.2.1",

@@ -27,12 +27,18 @@ const LoginScreen = () => {
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
     const { email, password } = data;
-    const { error } = await supabase.auth.signInWithPassword({
+    setLoading(true);
+    const { error, data: userData } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
+    if (error) {
+      Alert.alert("Error logging in", error.message);
+      setLoading(false);
+      return;
+    }
+    if (userData) setLoading(false);
   };
 
   return (
@@ -92,7 +98,7 @@ const LoginScreen = () => {
                 </Text>
               )}
             </View>
-            <Button mode='contained' style={styles.button} onPress={handleSubmit(onSubmit)}>
+            <Button loading={loading} mode='contained' style={styles.button} onPress={handleSubmit(onSubmit)}>
               Log In
             </Button>
           </View>
