@@ -1,12 +1,12 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
 import { PaperProvider } from "react-native-paper";
-import LoginScreen from "./login";
 import { theme } from "@/components/theme";
+import AuthProvider from "@/contexts/AuthProvider";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -48,12 +48,13 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <PaperProvider theme={theme} settings={{}}>
-      <Stack>
-        <Stack.Screen name='index' options={{ headerShown: false }} />
-        <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-        <Stack.Screen name='modal' options={{ presentation: "modal" }} />
-        <Stack.Screen name='login/index' options={{ headerShown: false }} />
-      </Stack>
+      <AuthProvider>
+        {({ loading }) => (
+          <>
+            <Slot />
+          </>
+        )}
+      </AuthProvider>
     </PaperProvider>
   );
 }

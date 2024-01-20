@@ -4,7 +4,9 @@ import { Text } from "react-native-paper";
 export default function TabOneScreen() {
   return (
     <View style={styles.container}>
-      <Text variant='displayMedium'>Welcome to the home page</Text>
+      <Text variant='titleLarge' style={{ textAlign: "center" }}>
+        Welcome to the home page
+      </Text>
     </View>
   );
 }

@@ -54,6 +54,8 @@ const LoginScreen = () => {
                   <TextInput
                     label='Email'
                     value={value}
+                    autoCapitalize='none'
+                    autoComplete='email'
                     onChangeText={onChange}
                     left={<TextInput.Icon icon='account' />}
                     mode='outlined'
