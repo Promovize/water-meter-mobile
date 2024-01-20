@@ -1,4 +1,4 @@
-import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Alert, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Button, List, MD3Colors, Text } from "react-native-paper";
 import { supabase } from "@/lib/supabase";
@@ -6,11 +6,10 @@ import { useRouter } from "expo-router";
 import { Route } from "@/constants/Route";
 import chroma from "chroma-js";
 import { defaultColors } from "@/components/theme/colors";
-import { Image, ImageBackground } from "expo-image";
+import { Image } from "expo-image";
 import { useAuth } from "@/contexts/AuthProvider";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link } from "expo-router";
 import { boxShaddow } from "@/utils/styles";
 
 const ProfileScreen = () => {
@@ -30,7 +29,14 @@ const ProfileScreen = () => {
   const paddinTop = insets.top + 20;
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={[
+        styles.container,
+        {
+          paddingBottom: insets.bottom + 20,
+        },
+      ]}
+    >
       <View
         style={[
           styles.contentHeader,

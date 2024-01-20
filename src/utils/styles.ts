@@ -2,7 +2,7 @@ export const boxShaddow = {
   shadowColor: "#000",
   shadowOffset: {
     width: 0,
-    height: 2,
+    height: 7,
   },
   shadowOpacity: 0.25,
   shadowRadius: 3.84,
