@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import { Button, Text, TextInput } from "react-native-paper";
 import { Link } from "expo-router";
@@ -7,6 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { Screen } from "@/components/Screen";
 import { supabase } from "@/lib/supabase";
+import { KeyboardAvoidingView } from "react-native";
+import { Platform } from "react-native";
 
 const schema = z.object({
   email: z.string().email(),
@@ -42,87 +44,91 @@ const LoginScreen = () => {
   };
 
   return (
-    <Screen>
-      <View style={styles.container}>
-        <View style={styles.wrapper}>
-          <View style={styles.header}>
-            <Text style={styles.title}>Welcome back</Text>
-            <Text variant='bodyMedium' style={styles.subTitle}>
-              Ready to make a splash in smart water management? Log in to DropDetect and let's conserve together.
-            </Text>
-          </View>
-          <View style={styles.form}>
-            <View style={styles.formControl}>
-              <Controller
-                control={control}
-                name='email'
-                render={({ field: { onChange, value } }) => (
-                  <TextInput
-                    label='Email'
-                    value={value}
-                    autoCapitalize='none'
-                    autoComplete='email'
-                    onChangeText={onChange}
-                    left={<TextInput.Icon icon='account' />}
-                    mode='outlined'
-                    theme={{ roundness: 50 }}
-                  />
-                )}
-              />
-              {errors.email && (
-                <Text variant='labelSmall' style={styles.errorMessage}>
-                  {errors.email.message}
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.mainContainer}>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <Screen>
+          <View style={styles.container}>
+            <View style={styles.wrapper}>
+              <View style={styles.header}>
+                <Text style={styles.title}>Welcome back</Text>
+                <Text variant='bodyMedium' style={styles.subTitle}>
+                  Ready to make a splash in smart water management? Log in to DropDetect and let's conserve together.
                 </Text>
-              )}
-            </View>
-            <View style={styles.formControl}>
-              <Controller
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <TextInput
-                    label='Password'
-                    secureTextEntry={!passwordVisible}
-                    value={value}
-                    onChangeText={onChange}
-                    mode='outlined'
-                    theme={{ roundness: 50 }}
-                    left={<TextInput.Icon icon='lock' />}
-                    right={<TextInput.Icon icon='eye' onPress={() => setPasswordVisible(!passwordVisible)} />}
+              </View>
+              <View style={styles.form}>
+                <View style={styles.formControl}>
+                  <Controller
+                    control={control}
+                    name='email'
+                    render={({ field: { onChange, value } }) => (
+                      <TextInput
+                        label='Email'
+                        value={value}
+                        autoCapitalize='none'
+                        autoComplete='email'
+                        onChangeText={onChange}
+                        left={<TextInput.Icon icon='account' />}
+                        mode='outlined'
+                        theme={{ roundness: 50 }}
+                      />
+                    )}
                   />
-                )}
-                name='password'
-              />
-              {errors.password && (
-                <Text variant='labelSmall' style={styles.errorMessage}>
-                  {errors.password.message}
-                </Text>
-              )}
+                  {errors.email && (
+                    <Text variant='labelSmall' style={styles.errorMessage}>
+                      {errors.email.message}
+                    </Text>
+                  )}
+                </View>
+                <View style={styles.formControl}>
+                  <Controller
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <TextInput
+                        label='Password'
+                        secureTextEntry={!passwordVisible}
+                        value={value}
+                        onChangeText={onChange}
+                        mode='outlined'
+                        theme={{ roundness: 50 }}
+                        left={<TextInput.Icon icon='lock' />}
+                        right={<TextInput.Icon icon='eye' onPress={() => setPasswordVisible(!passwordVisible)} />}
+                      />
+                    )}
+                    name='password'
+                  />
+                  {errors.password && (
+                    <Text variant='labelSmall' style={styles.errorMessage}>
+                      {errors.password.message}
+                    </Text>
+                  )}
+                </View>
+                <Button loading={loading} mode='contained' style={styles.button} onPress={handleSubmit(onSubmit)}>
+                  Log In
+                </Button>
+              </View>
             </View>
-            <Button loading={loading} mode='contained' style={styles.button} onPress={handleSubmit(onSubmit)}>
-              Log In
-            </Button>
-          </View>
-        </View>
-        <View style={styles.footer}>
-          <Text variant='bodyMedium' style={styles.noAccount}>
-            Don't have an account?{" "}
-            <Link href='https://promovize.dev'>
-              <Text
-                variant='bodyMedium'
-                style={[
-                  {
-                    color: "#007AFF",
-                    fontWeight: "bold",
-                  },
-                ]}
-              >
-                Contact Us
+            <View style={styles.footer}>
+              <Text variant='bodyMedium' style={styles.noAccount}>
+                Don't have an account?{" "}
+                <Link href='https://promovize.dev'>
+                  <Text
+                    variant='bodyMedium'
+                    style={[
+                      {
+                        color: "#007AFF",
+                        fontWeight: "bold",
+                      },
+                    ]}
+                  >
+                    Contact Us
+                  </Text>
+                </Link>
               </Text>
-            </Link>
-          </Text>
-        </View>
-      </View>
-    </Screen>
+            </View>
+          </View>
+        </Screen>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -167,4 +173,10 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   formControl: {},
+  scrollView: {
+    flexGrow: 1,
+  },
+  mainContainer: {
+    flex: 1,
+  },
 });
