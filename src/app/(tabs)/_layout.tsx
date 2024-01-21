@@ -8,18 +8,17 @@ import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import { Text } from "react-native-paper";
 import { Route } from "@/constants/Route";
 import { useAuth } from "@/contexts/AuthProvider";
-import LodingContainer from "@/components/LodingContainer";
 import { boxShaddow } from "@/utils/styles";
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
 import { triggerLightImpact } from "@/utils/haptics";
-import { useNavigation } from "expo-router";
+import LoadingContainer from "@/components/LoadingContainer";
 
 export default function TabLayout() {
   const { loading, session } = useAuth();
   const router = useRouter();
 
   if (loading) {
-    return <LodingContainer />;
+    return <LoadingContainer />;
   }
 
   if (!session) {

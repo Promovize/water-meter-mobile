@@ -82,7 +82,6 @@ const AuthProvider = (props: Props) => {
       }
 
       if (data) {
-        console.log({ data });
         setProfile(data);
         router.replace(Route.Home);
       }

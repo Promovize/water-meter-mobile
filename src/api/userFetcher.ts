@@ -6,3 +6,10 @@ export const usersFetcher = async ({ from, to }: { from: number; to: number }): 
   if (error) throw error;
   return data;
 };
+
+export const getSingleUser = async (id: string): Promise<User> => {
+  const { data, error } = await supabase.from("profiles").select("*").eq("id", id).single();
+
+  if (error) throw error;
+  return data;
+};

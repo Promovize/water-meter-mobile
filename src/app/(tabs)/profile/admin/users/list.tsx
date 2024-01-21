@@ -1,5 +1,5 @@
 import { View, Alert, StyleSheet, ScrollView } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, DataTable, Dialog, Menu, Portal, Text } from "react-native-paper";
 import useSWR from "swr";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -19,14 +19,14 @@ const UsersList = () => {
   const from = page * itemsPerPage;
   const to = (page + 1) * itemsPerPage;
 
-  const { data: users, error, mutate } = useSWR("/users", () => usersFetcher({ from, to }));
+  const { data: users, error, mutate } = useSWR(`/users/`, () => usersFetcher({ from, to }));
   const isLoading = !users && !error;
 
   if (error) {
     Alert.alert("Error fetching users", error.message);
   }
 
-  const pagedUsers = users?.slice(from, to);
+  const pagedUsers = (users || []).slice(from, to);
 
   const handleDeleteUser = async (userId: string) => {
     try {
@@ -40,6 +40,7 @@ const UsersList = () => {
       setDeletingUserId(null);
     }
   };
+
   return (
     <View>
       <ScrollView horizontal>
