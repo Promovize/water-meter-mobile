@@ -1,23 +1,32 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
-import { Camera, CameraType, FlashMode } from "expo-camera";
+import { AutoFocus, Camera, CameraType, FlashMode } from "expo-camera";
 import { Button } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CamaraHeader from "@/components/camera/CamaraHeader";
 import CameraFooter from "@/components/camera/CameraFooter";
+import CornerBorderSquare from "@/components/camera/CornerBorderSquare";
+import { useNavigation, useRouter } from "expo-router";
 
 const ScanScreen = () => {
-  const [type, setType] = useState(CameraType.back);
   const [flash, setFlash] = useState(false); // [1
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const insets = useSafeAreaInsets();
-
-  const toggleCameraType = () => {
-    setType((current) => (current === CameraType.back ? CameraType.front : CameraType.back));
-  };
+  const cameraRef = React.useRef<Camera>(null);
+  const router = useRouter();
 
   const toggleFlash = () => {
     setFlash((current) => !current);
+  };
+
+  const handleTakePicture = async () => {
+    const photo = await cameraRef.current?.takePictureAsync();
+    router.push({
+      pathname: "/(tabs)/scan/image",
+      params: {
+        imageUri: photo?.uri!,
+      },
+    });
   };
 
   const paddingTop = insets.top + 20;
@@ -64,11 +73,14 @@ const ScanScreen = () => {
             paddingTop,
           },
         ]}
-        type={type}
-        flashMode={flash ? FlashMode.torch : FlashMode.off}
+        type={CameraType.back}
+        ref={cameraRef}
+        flashMode={flash ? FlashMode.on : FlashMode.off}
+        autoFocus={AutoFocus.on}
       >
         <CamaraHeader flashOn={flash} toggleFlash={toggleFlash} />
-        <CameraFooter />
+        <CornerBorderSquare />
+        <CameraFooter onTakePicture={handleTakePicture} />
       </Camera>
     </View>
   );
@@ -83,6 +95,8 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
     position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
   },
   buttonContainer: {
     flex: 1,

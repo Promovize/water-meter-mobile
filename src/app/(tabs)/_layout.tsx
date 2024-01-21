@@ -41,7 +41,7 @@ export default function TabLayout() {
           right: 15,
           borderTopWidth: 0,
           paddingBottom: 0,
-          display: route.name === "scan/index" ? "none" : "flex",
+          display: route.name.includes("scan") ? "none" : "flex",
         },
         tabBarItemStyle: {
           paddingBottom: 0,
@@ -86,7 +86,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name='scan/index'
+        name='scan'
         options={{
           title: "Scan",
           headerShown: false,
@@ -100,12 +100,7 @@ export default function TabLayout() {
                 justifyContent: "center",
               }}
             >
-              <Pressable
-                style={styles.scanButton}
-                onPress={() => {
-                  useNavigation("/(tabs)/scan");
-                }}
-              >
+              <Pressable style={styles.scanButton} onPress={() => {}}>
                 <AntDesign name='scan1' size={30} color={defaultColors.secondary} />
               </Pressable>
             </View>
