@@ -1,17 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { useRoute } from "@react-navigation/native";
 
-const EditUser = () => {
-  const route = useRoute();
-
+const EditUserScreen = () => {
   return (
     <View>
-      <Text>EditUser</Text>
+      <Text>EditUserScreen</Text>
     </View>
   );
 };
 
-export default EditUser;
+export default EditUserScreen;
 
 const styles = StyleSheet.create({});

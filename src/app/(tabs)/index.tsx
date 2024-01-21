@@ -14,7 +14,7 @@ const HomeScreen = () => {
         Scan Your Water Meter
       </Button>
 
-      <Button mode='contained' onPress={() => router.push("/(tabs)/profile/(admin)/users/new")}>
+      <Button mode='contained' onPress={() => router.push("/(tabs)/profile/admin/users/new")}>
         Create new User
       </Button>
     </View>

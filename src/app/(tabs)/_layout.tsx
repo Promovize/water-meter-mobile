@@ -63,7 +63,7 @@ export default function TabLayout() {
               title='Home'
               active={focused}
               onPress={() => {
-                useNavigation("/(tabs)/");
+                router.push("/(tabs)/");
               }}
             />
           ),
@@ -79,7 +79,7 @@ export default function TabLayout() {
               title='Transactions'
               active={focused}
               onPress={() => {
-                useNavigation("/(tabs)/transactions");
+                router.push("/(tabs)/transactions");
               }}
             />
           ),
@@ -100,7 +100,7 @@ export default function TabLayout() {
                 justifyContent: "center",
               }}
             >
-              <Pressable style={styles.scanButton} onPress={() => {}}>
+              <Pressable style={styles.scanButton} onPress={() => router.push("/(tabs)/scan")}>
                 <AntDesign name='scan1' size={30} color={defaultColors.secondary} />
               </Pressable>
             </View>
@@ -112,14 +112,7 @@ export default function TabLayout() {
         options={{
           title: "Activity",
           tabBarIcon: ({ focused }) => (
-            <TabItem
-              icon='bell'
-              title='Activity'
-              active={focused}
-              onPress={() => {
-                useNavigation("/(tabs)/activities");
-              }}
-            />
+            <TabItem icon='bell' title='Activity' active={focused} onPress={() => router.push("/(tabs)/activities")} />
           ),
         }}
       />
@@ -134,7 +127,7 @@ export default function TabLayout() {
               title='Profile'
               active={focused}
               onPress={() => {
-                useNavigation("/(tabs)/profile");
+                router.push("/(tabs)/profile");
               }}
             />
           ),
