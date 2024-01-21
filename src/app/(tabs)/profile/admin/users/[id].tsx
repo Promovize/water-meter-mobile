@@ -1,10 +1,10 @@
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
-import React, { forwardRef, useState } from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Text, TextInput } from "react-native-paper";
-import MaskInput, { Masks } from "react-native-mask-input";
+import MaskInput from "react-native-mask-input";
 import { supabase } from "@/lib/supabase";
 
 const schema = z.object({

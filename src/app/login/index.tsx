@@ -1,7 +1,7 @@
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import { Button, Text, TextInput } from "react-native-paper";
-import { Link } from "expo-router";
+import { Link, router, useRouter } from "expo-router";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
@@ -18,7 +18,7 @@ const schema = z.object({
 const LoginScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter();
   const {
     control,
     handleSubmit,
@@ -30,6 +30,7 @@ const LoginScreen = () => {
   const onSubmit = async (data: z.infer<typeof schema>) => {
     const { email, password } = data;
     setLoading(true);
+
     const { error, data: userData } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
@@ -41,6 +42,7 @@ const LoginScreen = () => {
       return;
     }
     if (userData) setLoading(false);
+    router.push("/(tabs)/");
   };
 
   return (

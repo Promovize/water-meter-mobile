@@ -73,7 +73,7 @@ const AuthProvider = (props: Props) => {
 
       const { data, error, status } = await supabase
         .from("profiles")
-        .select(`id, username, website, avatar_url, full_name, email, phone, role`)
+        .select(`id, website, avatar_url, full_name, email, phone, role`)
         .eq("id", userId)
         .single();
 
@@ -82,6 +82,7 @@ const AuthProvider = (props: Props) => {
       }
 
       if (data) {
+        console.log({ data });
         setProfile(data);
         router.replace(Route.Home);
       }

@@ -89,8 +89,16 @@ const ProfileScreen = () => {
       <View style={styles.menuList}>
         <List.Section>
           <List.Subheader>MANAGE USERS</List.Subheader>
-          <List.Item title='List of users' left={() => <List.Icon icon='home' />} />
-          <List.Item title='Create new user' left={() => <List.Icon color={MD3Colors.tertiary70} icon='folder' />} />
+          <List.Item
+            title='List of users'
+            onPress={() => router.push("/(tabs)/profile/admin/users/list")}
+            left={() => <List.Icon icon='home' />}
+          />
+          <List.Item
+            title='Create new user'
+            onPress={() => router.push("/(tabs)/profile/admin/users/new")}
+            left={() => <List.Icon color={MD3Colors.tertiary70} icon='folder' />}
+          />
         </List.Section>
         <List.Section>
           <List.Subheader>MANAGE TRANSACTIONS</List.Subheader>

@@ -3,10 +3,7 @@ import React from "react";
 import { UserRole, useAuth } from "@/contexts/AuthProvider";
 import { Redirect, Stack } from "expo-router";
 import { RouteProp, useRoute } from "@react-navigation/native";
-
-type Props = {
-  children: React.ReactNode;
-};
+import HeaderBack from "@/components/common/HeaderBack";
 
 type RootStackParamList = {
   AdminScreensLayout: { id: string }; // Define other routes here
@@ -14,8 +11,7 @@ type RootStackParamList = {
 
 type AdminScreensLayoutRouteProp = RouteProp<RootStackParamList, "AdminScreensLayout">;
 
-const AdminScreensLayout = (props: Props) => {
-  const { children } = props;
+const AdminScreensLayout = () => {
   const { user } = useAuth();
   const route = useRoute<AdminScreensLayoutRouteProp>();
   const { id } = route.params;
@@ -28,11 +24,18 @@ const AdminScreensLayout = (props: Props) => {
 
   return (
     <Stack>
-      <Stack.Screen name='users/index' />
+      <Stack.Screen
+        name='users/list'
+        options={{
+          title: "Users",
+          headerLeft: ({ tintColor }) => <HeaderBack color={tintColor} />,
+        }}
+      />
       <Stack.Screen
         name='users/[id]'
         options={{
           title: isNewUserScreen ? "Create new User" : "Edit User",
+          headerLeft: ({ tintColor }) => <HeaderBack color={tintColor} />,
         }}
       />
     </Stack>
