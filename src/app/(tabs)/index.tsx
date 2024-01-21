@@ -13,6 +13,10 @@ const HomeScreen = () => {
       <Button mode='contained' onPress={() => router.push("/(tabs)/scan")}>
         Scan Your Water Meter
       </Button>
+
+      <Button mode='contained' onPress={() => router.push("/(tabs)/profile/(admin)/users/new")}>
+        Create new User
+      </Button>
     </View>
   );
 };
@@ -25,6 +29,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
+    gap: 20,
   },
   title: {
     fontSize: 20,

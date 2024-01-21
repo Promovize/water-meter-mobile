@@ -1,9 +1,10 @@
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import React from "react";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { Button, Text } from "react-native-paper";
 import { useRouter } from "expo-router";
+import { supabase } from "@/lib/supabase";
 
 type RootStackParamList = {
   Image: { imageUri: string };
@@ -14,7 +15,26 @@ type ImageScreenRouteProp = RouteProp<RootStackParamList, "Image">;
 const ImageScreen = () => {
   const route = useRoute<ImageScreenRouteProp>();
   const router = useRouter();
+  const [processing, setProcessing] = React.useState(false);
+  const [result, setResult] = React.useState<string | null>(null);
   const { imageUri } = route.params;
+
+  const uploadImageForProcessing = async () => {
+    setProcessing(true);
+    const formData = new FormData();
+
+    const { data, error } = await supabase.functions.invoke("upload_for_image_processing", {
+      body: formData,
+    });
+    if (error) {
+      Alert.alert("Error", error.message);
+      setProcessing(false);
+    }
+    if (data) {
+      setResult(data);
+      setProcessing(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -25,10 +45,10 @@ const ImageScreen = () => {
       </View>
       <Image source={{ uri: imageUri }} style={styles.image} />
       <View style={styles.buttonsWrapper}>
-        <Button mode='contained' onPress={() => router.back()} style={styles.button}>
+        <Button mode='contained' onPress={() => router.back()} style={styles.button} disabled={processing}>
           Retake
         </Button>
-        <Button mode='contained' onPress={() => {}} style={styles.button}>
+        <Button mode='contained' onPress={() => {}} style={styles.button} loading={processing}>
           Next
         </Button>
       </View>
