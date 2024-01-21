@@ -46,6 +46,7 @@
     "react-native-screens": "~3.22.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.19.6",
+    "swr": "^2.2.4",
     "zod": "^3.22.4",
     "zustand": "^4.5.0"
   },
