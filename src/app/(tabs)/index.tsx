@@ -1,15 +1,23 @@
+import { useRouter } from "expo-router";
 import { StyleSheet, View } from "react-native";
-import { Text } from "react-native-paper";
+import { Button, Text } from "react-native-paper";
 
-export default function TabOneScreen() {
+const HomeScreen = () => {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
       <Text variant='titleLarge' style={{ textAlign: "center" }}>
         Welcome to the home page
       </Text>
+      <Button mode='contained' onPress={() => router.push("/(tabs)/scan")}>
+        Scan Your Water Meter
+      </Button>
     </View>
   );
-}
+};
+
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {

@@ -1,8 +1,8 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { Link, Redirect, Tabs, useNavigation, useRouter } from "expo-router";
-import { Pressable, SafeAreaView, StyleSheet, View } from "react-native";
+import { Redirect, Tabs, useRouter } from "expo-router";
+import { Pressable, StyleSheet, View } from "react-native";
 import { defaultColors } from "@/components/theme/colors";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import { Text } from "react-native-paper";
@@ -10,15 +10,13 @@ import { Route } from "@/constants/Route";
 import { useAuth } from "@/contexts/AuthProvider";
 import LodingContainer from "@/components/LodingContainer";
 import { boxShaddow } from "@/utils/styles";
-
-function TabBarIcon(props: { name: React.ComponentProps<typeof FontAwesome>["name"]; color: string }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
+import { triggerLightImpact } from "@/utils/haptics";
+import { useNavigation } from "expo-router";
 
 export default function TabLayout() {
-  const { user, loading, session } = useAuth();
+  const { loading, session } = useAuth();
   const router = useRouter();
-  const navigation = useNavigation();
 
   if (loading) {
     return <LodingContainer />;
@@ -30,7 +28,7 @@ export default function TabLayout() {
 
   return (
     <Tabs
-      screenOptions={{
+      screenOptions={({ route }) => ({
         tabBarActiveTintColor: defaultColors.primary,
         headerShown: useClientOnlyValue(false, true),
         tabBarShowLabel: false,
@@ -43,6 +41,7 @@ export default function TabLayout() {
           right: 15,
           borderTopWidth: 0,
           paddingBottom: 0,
+          display: route.name === "scan/index" ? "none" : "flex",
         },
         tabBarItemStyle: {
           paddingBottom: 0,
@@ -50,8 +49,9 @@ export default function TabLayout() {
           padding: 0,
           margin: 0,
           paddingVertical: 0,
+          zIndex: 100,
         },
-      }}
+      })}
     >
       <Tabs.Screen
         name='index'
@@ -62,7 +62,9 @@ export default function TabLayout() {
               icon='home'
               title='Home'
               active={focused}
-              // onPress={() => router.push("/(tabs)")}
+              onPress={() => {
+                useNavigation("/(tabs)/");
+              }}
             />
           ),
         }}
@@ -76,7 +78,9 @@ export default function TabLayout() {
               icon='exchange'
               title='Transactions'
               active={focused}
-              // onPress={() => navigation.navigate([])}
+              onPress={() => {
+                useNavigation("/(tabs)/transactions");
+              }}
             />
           ),
         }}
@@ -84,7 +88,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name='scan/index'
         options={{
-          title: "Transactions",
+          title: "Scan",
+          headerShown: false,
+          headerBackground: () => "#000",
+
           tabBarButton: ({}) => (
             <View
               style={{
@@ -93,7 +100,12 @@ export default function TabLayout() {
                 justifyContent: "center",
               }}
             >
-              <Pressable style={styles.scanButton} onPress={() => {}}>
+              <Pressable
+                style={styles.scanButton}
+                onPress={() => {
+                  useNavigation("/(tabs)/scan");
+                }}
+              >
                 <AntDesign name='scan1' size={30} color={defaultColors.secondary} />
               </Pressable>
             </View>
@@ -109,7 +121,9 @@ export default function TabLayout() {
               icon='bell'
               title='Activity'
               active={focused}
-              // onPress={() => router.push("/(tabs)/activities")}
+              onPress={() => {
+                useNavigation("/(tabs)/activities");
+              }}
             />
           ),
         }}
@@ -124,7 +138,9 @@ export default function TabLayout() {
               icon='user'
               title='Profile'
               active={focused}
-              // onPress={() => router.push("/(tabs)/profile/")}
+              onPress={() => {
+                useNavigation("/(tabs)/profile");
+              }}
             />
           ),
         }}
@@ -141,18 +157,36 @@ type TabItemProps = {
 };
 
 const TabItem = ({ title, icon, active, onPress }: TabItemProps) => {
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+    };
+  });
+
+  const handlePress = () => {
+    scale.value = withSpring(1.2, { damping: 4 }, () => {
+      scale.value = withSpring(1);
+    });
+    triggerLightImpact();
+    onPress?.();
+  };
+
   return (
-    <Pressable style={styles.tabItem} onPress={onPress}>
-      <FontAwesome name={icon} size={24} color={active ? defaultColors.primary : defaultColors.gray400} />
-      <Text
-        style={{
-          color: active ? defaultColors.primary : defaultColors.gray400,
-          fontSize: 12,
-        }}
-        numberOfLines={1}
-      >
-        {title}
-      </Text>
+    <Pressable style={styles.tabItem} onPress={handlePress}>
+      <Animated.View style={[animatedStyle, styles.tabItem]}>
+        <FontAwesome name={icon} size={24} color={active ? defaultColors.primary : defaultColors.gray400} />
+        <Text
+          style={{
+            color: active ? defaultColors.primary : defaultColors.gray400,
+            fontSize: 12,
+          }}
+          numberOfLines={1}
+        >
+          {title}
+        </Text>
+      </Animated.View>
     </Pressable>
   );
 };

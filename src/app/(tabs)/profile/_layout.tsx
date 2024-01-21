@@ -10,7 +10,6 @@ const ProfileLayout = () => {
           headerShown: false,
         }}
       />
-      {/* edit screen as a modal */}
       <Stack.Screen
         name='edit'
         options={{

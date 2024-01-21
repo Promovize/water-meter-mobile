@@ -48,7 +48,7 @@ const LoginScreen = () => {
           <View style={styles.header}>
             <Text style={styles.title}>Welcome back</Text>
             <Text variant='bodyMedium' style={styles.subTitle}>
-              Ready to make a splash in smart water management? Log in to AquaIntel and let's conserve together.
+              Ready to make a splash in smart water management? Log in to DropDetect and let's conserve together.
             </Text>
           </View>
           <View style={styles.form}>
