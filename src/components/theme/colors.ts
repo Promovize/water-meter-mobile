@@ -13,6 +13,7 @@ const defaultColors = {
   gray400: "#BDBDBD",
   gray500: "#9E9E9E",
   error: "#FF0000",
+  success: "#008000",
 };
 
 export { defaultColors };

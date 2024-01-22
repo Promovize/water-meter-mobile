@@ -1,18 +1,130 @@
 import { defaultColors } from "@/components/theme/colors";
 import { boxShaddow } from "@/utils/styles";
-import chroma from "chroma-js";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useRouter } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-paper";
-import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
 import { Image, ImageBackground } from "expo-image";
 import { useAuth } from "@/contexts/AuthProvider";
+import chroma from "chroma-js";
+import { FlatList } from "react-native";
+import ListItem, { Invoice, InvoiceStatus } from "@/components/common/ListItem";
+import ListItemSeparator from "@/components/common/ListItemSeparator";
 
 const HomeScreen = () => {
   const router = useRouter();
   const { user } = useAuth();
-  const cardNumber = "1234 5678 9012 3456";
+  const cardNumber = "1234 **** **** 3456";
+
+  const invoices = [
+    {
+      id: "1",
+      amount: 10000,
+      date: new Date(),
+      meterNumber: "123456789",
+      status: "Success",
+    },
+    {
+      id: "2",
+      amount: 10000,
+      date: new Date(),
+      meterNumber: "123456789",
+      status: "Failed",
+    },
+    {
+      id: "3",
+      amount: 10000,
+      date: new Date(),
+      meterNumber: "123456789",
+      status: "Success",
+    },
+    {
+      id: "4",
+      amount: 10000,
+      date: new Date(),
+      meterNumber: "123456789",
+      status: "Failed",
+    },
+    {
+      id: "5",
+      amount: 10000,
+      date: new Date(),
+      meterNumber: "123456789",
+      status: "Success",
+    },
+    {
+      id: "6",
+      amount: 10000,
+      date: new Date(),
+      meterNumber: "123456789",
+      status: "Failed",
+    },
+    {
+      id: "7",
+      amount: 10000,
+      date: new Date(),
+      meterNumber: "123456789",
+      status: "Success",
+    },
+    {
+      id: "8",
+      amount: 10000,
+      date: new Date(),
+      meterNumber: "123456789",
+      status: "Failed",
+    },
+    {
+      id: "9",
+      amount: 10000,
+      date: new Date(),
+      meterNumber: "123456789",
+      status: "Success",
+    },
+    {
+      id: "10",
+      amount: 10000,
+      date: new Date(),
+      meterNumber: "123456789",
+      status: "Failed",
+    },
+    {
+      id: "11",
+      amount: 10000,
+      date: new Date(),
+      meterNumber: "123456789",
+      status: "Success",
+    },
+    {
+      id: "12",
+      amount: 10000,
+      date: new Date(),
+      meterNumber: "123456789",
+      status: "Failed",
+    },
+    {
+      id: "13",
+      amount: 10000,
+      date: new Date(),
+      meterNumber: "123456789",
+      status: "Success",
+    },
+    {
+      id: "14",
+      amount: 10000,
+      date: new Date(),
+      meterNumber: "123456789",
+      status: "Failed",
+    },
+  ];
+
+  const statusToColor = (status: InvoiceStatus) => {
+    switch (status) {
+      case InvoiceStatus.Success:
+        return defaultColors.success;
+      case InvoiceStatus.Failed:
+        return defaultColors.error;
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -33,6 +145,26 @@ const HomeScreen = () => {
           {user?.full_name}
         </Text>
       </ImageBackground>
+      <View style={styles.invoices}>
+        <Text variant='titleSmall' style={styles.invoicesTitle}>
+          Invoices
+        </Text>
+        <FlatList
+          data={invoices}
+          ItemSeparatorComponent={ListItemSeparator}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <ListItem
+              date={item.date}
+              status='Success'
+              statusColor={statusToColor(item.status as InvoiceStatus)}
+              title={`Meter No ${item.meterNumber}`}
+              subtitle={`FRW ${item.amount}`}
+              icon='exchange'
+            />
+          )}
+        />
+      </View>
     </View>
   );
 };
@@ -90,5 +222,13 @@ const styles = StyleSheet.create({
     bottom: 20,
     right: 20,
     color: defaultColors.white,
+  },
+  invoices: {
+    width: "100%",
+  },
+  invoicesTitle: {
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    textAlign: "left",
   },
 });
