@@ -19,8 +19,8 @@ const EditUserScreen = () => {
   const router = useRouter();
 
   const { data: user, error, mutate } = useSWR(id !== "new" ? `/users/${id}` : null, () => getSingleUser(id));
-  const loadingUser = !user && !error;
   const isCreatingNewUser = id === "new";
+  const loadingUser = !user && !error && !isCreatingNewUser;
 
   const schema = z.object({
     firstName: z.string().min(2, "Too Short!").max(50, "Too Long!"),
