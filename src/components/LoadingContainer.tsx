@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     zIndex: 1,
+    flex: 1,
   },
   indicator: {
     flex: 1,

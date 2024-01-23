@@ -22,7 +22,7 @@ export default function TabLayout() {
   }
 
   if (!session) {
-    <Redirect href={Route.Login} />;
+    return <Redirect href={Route.Login} />;
   }
 
   return (
