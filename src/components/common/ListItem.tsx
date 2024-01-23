@@ -23,7 +23,7 @@ type InvoiceItemProps = {
   subtitle: string;
   date: Date;
   status: string;
-  statusColor: string;
+  statusColor?: string;
   icon?: React.ComponentProps<typeof FontAwesome>["name"];
 };
 

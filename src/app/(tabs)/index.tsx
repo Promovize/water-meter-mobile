@@ -1,14 +1,11 @@
 import { defaultColors } from "@/components/theme/colors";
 import { boxShaddow } from "@/utils/styles";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useRouter } from "expo-router";
 import { StyleSheet, View } from "react-native";
-import { Button, Text } from "react-native-paper";
+import { Text } from "react-native-paper";
 import { Image, ImageBackground } from "expo-image";
 import { useAuth } from "@/contexts/AuthProvider";
-import chroma from "chroma-js";
 import { FlatList } from "react-native";
-import ListItem, { Invoice, InvoiceStatus } from "@/components/common/ListItem";
+import ListItem, { InvoiceStatus } from "@/components/common/ListItem";
 import ListItemSeparator from "@/components/common/ListItemSeparator";
 
 export const invoices = [
@@ -113,7 +110,6 @@ export const invoices = [
 ];
 
 const HomeScreen = () => {
-  const router = useRouter();
   const { user } = useAuth();
   const cardNumber = "1234 **** **** 3456";
 
@@ -153,6 +149,7 @@ const HomeScreen = () => {
           data={invoices}
           ItemSeparatorComponent={ListItemSeparator}
           keyExtractor={(item) => item.id}
+          showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
             <ListItem
               date={item.date}
