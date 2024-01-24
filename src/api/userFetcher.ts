@@ -13,3 +13,14 @@ export const getSingleUser = async (id: string): Promise<User> => {
   if (error) throw error;
   return data;
 };
+
+export const getHistory = async (userId: string): Promise<any> => {
+  const { data, error } = await supabase
+    .from("history")
+    .select("*, meter_numbers(*)")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return data;
+};

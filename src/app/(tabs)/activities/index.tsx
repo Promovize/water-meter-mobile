@@ -4,6 +4,9 @@ import { Text } from "react-native-paper";
 import ListItemSeparator from "@/components/common/ListItemSeparator";
 import ListItem from "@/components/common/ListItem";
 import { defaultColors } from "@/components/theme/colors";
+import { getHistory } from "@/api/userFetcher";
+import useSWR from "swr";
+import { useAuth } from "@/contexts/AuthProvider";
 
 export enum Status {
   Blurry = "BLURRY",
@@ -13,12 +16,16 @@ export enum Status {
 }
 
 const ActivitiesScreen = () => {
-  const history: any[] = [
-    { id: "1", date: new Date(), status: Status.Blurry, meterNumber: "123456789", amount: 10000 },
-    { id: "2", date: new Date(), status: Status.NoMeter, meterNumber: "123456789", amount: 10000 },
-    { id: "3", date: new Date(), status: Status.NoMeterDetails, meterNumber: "123456789", amount: 10000 },
-    { id: "4", date: new Date(), status: Status.Success, meterNumber: "123456789", amount: 10000 },
-  ];
+  const { user } = useAuth();
+  const {
+    data: scansHistory,
+    mutate,
+    error,
+    isValidating,
+  } = useSWR(user ? "history" : null, () => getHistory(user?.id as string));
+  const isLoading = !scansHistory && !error;
+
+  console.log({ scansHistory: scansHistory?.[0] });
 
   const statusToColor = (status: Status) => {
     switch (status) {
@@ -59,29 +66,37 @@ const ActivitiesScreen = () => {
     }
   };
 
+  const convertMeterNumber = (meterNumber: string) => {
+    const firstTwo = meterNumber.slice(0, 2);
+    const lastTwo = meterNumber.slice(-2);
+    const converted = `${firstTwo}...${lastTwo}`;
+    return converted;
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.history}>
-        <Text variant='titleSmall' style={styles.historyTitle}>
-          History
-        </Text>
-        <FlatList
-          data={history}
-          ItemSeparatorComponent={ListItemSeparator}
-          keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <ListItem
-              date={item.date}
-              status={statusToText(item.status as Status)}
-              statusColor={statusToColor(item.status as Status)}
-              title={`Meter No ${item.meterNumber}`}
-              subtitle={`FRW ${item.amount}`}
-              icon={statusToIcon(item.status as Status)}
-            />
-          )}
-        />
-      </View>
+      <Text variant='titleSmall' style={styles.historyTitle}>
+        History
+      </Text>
+      <FlatList
+        data={scansHistory || []}
+        ItemSeparatorComponent={ListItemSeparator}
+        keyExtractor={(item) => item.id}
+        onRefresh={mutate}
+        refreshing={isLoading || isValidating}
+        style={styles.history}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <ListItem
+            date={item.date}
+            status={statusToText(item.status as Status)}
+            statusColor={statusToColor(item.status as Status)}
+            title={`Meter No ${convertMeterNumber(item.meter_numbers?.name || "") || "-"} `}
+            subtitle={`FRW ${item.amount || "2000"}`}
+            icon={statusToIcon(item.status as Status)}
+          />
+        )}
+      />
     </View>
   );
 };
@@ -100,5 +115,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+  },
+  historyList: {
+    // flex: 1,
+    width: "100%",
+    backgroundColor: "orange",
   },
 });

@@ -4,6 +4,7 @@ import { Text } from "react-native-paper";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import chroma from "chroma-js";
 import { StyleSheet } from "react-native";
+import moment from "moment";
 
 export enum InvoiceStatus {
   Success = "Success",
@@ -47,7 +48,7 @@ const ListItem = (props: InvoiceItemProps) => {
             {status}
           </Text>
           <Text variant='titleSmall' style={styles.date}>
-            {date.toDateString()}
+            {moment(date).format("DD MMM YYYY")}
           </Text>
         </View>
       </View>

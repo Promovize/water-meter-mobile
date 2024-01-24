@@ -7,9 +7,15 @@ import { useRouter } from "expo-router";
 import { useAuth } from "@/contexts/AuthProvider";
 import axios from "axios";
 import { getErrorMessage } from "@/utils/errorHandler";
-import { Status } from "../activities";
 import { boxShaddow } from "@/utils/styles";
 import { defaultColors } from "@/components/theme/colors";
+
+enum Status {
+  Blurry = "BLURRY",
+  NoMeter = "NO_METER",
+  NoMeterDetails = "NO_METER_DETAILS",
+  Success = "SUCCESS",
+}
 
 type RootStackParamList = {
   Image: { imageUri: string };
@@ -21,7 +27,8 @@ const ImageScreen = () => {
   const route = useRoute<ImageScreenRouteProp>();
   const router = useRouter();
   const [processing, setProcessing] = React.useState(false);
-  const [result, setResult] = React.useState<string | null>(null);
+  const [result, setResult] = React.useState<null>(null);
+  const [paying, setPaying] = React.useState(false);
   const { imageUri } = route.params;
 
   const { session } = useAuth();
@@ -46,7 +53,7 @@ const ImageScreen = () => {
         },
       });
 
-      setResult(Array.isArray(data) ? data[0] : data);
+      setResult(Array.isArray(data) ? data[0]["0"] : data);
       setProcessing(false);
       Alert.alert("Image uploaded and processed successfully");
     } catch (error: any) {
@@ -56,12 +63,40 @@ const ImageScreen = () => {
   };
 
   const handlePayment = async () => {
+    setPaying(true);
     setTimeout(() => {
       Alert.alert("Payment successful");
-      router.push("/(tabs)");
+      setPaying(false);
+      router.push("/(tabs)/activities/");
     }, 1000);
   };
-  const receivedData: any = result;
+  const receivedData: any = result?.["0"] ? result?.["0"] : result;
+  const meter = (result as any)?.meter;
+
+  const statusToColor = (status: Status) => {
+    switch (status) {
+      case Status.Blurry:
+        return defaultColors.error;
+      case Status.NoMeter:
+        return defaultColors.error;
+      case Status.NoMeterDetails:
+        return defaultColors.error;
+      case Status.Success:
+        return defaultColors.success;
+    }
+  };
+  const statusToText = (status: Status) => {
+    switch (status) {
+      case Status.Blurry:
+        return "Blurry";
+      case Status.NoMeter:
+        return "No Meter visible";
+      case Status.NoMeterDetails:
+        return "No Meter Details";
+      case Status.Success:
+        return "Success";
+    }
+  };
 
   const canPay = receivedData?.status === "SUCCESS";
 
@@ -90,7 +125,7 @@ const ImageScreen = () => {
         <View style={styles.pressedDataWrapper}>
           <View style={styles.pressedData}>
             <Text variant='titleMedium'>Meter Number:</Text>
-            <Text>1234567</Text>
+            <Text>{meter?.name || "-"}</Text>
           </View>
           <View style={styles.pressedData}>
             <Text variant='titleMedium'>Meter Reading:</Text>
@@ -102,7 +137,15 @@ const ImageScreen = () => {
           </View>
           <View style={styles.pressedData}>
             <Text variant='titleMedium'>Meter status:</Text>
-            <Text>{receivedData?.status || "-"}</Text>
+            <Text
+              style={{
+                color: statusToColor(receivedData?.status),
+                fontWeight: "bold",
+                fontSize: 16,
+              }}
+            >
+              {statusToText(receivedData?.status) || "-"}
+            </Text>
           </View>
         </View>
       )}
@@ -113,7 +156,7 @@ const ImageScreen = () => {
             Cancel
           </Button>
           {canPay && (
-            <Button onPress={handlePayment} mode='contained'>
+            <Button onPress={handlePayment} mode='contained' loading={paying}>
               Proceed to payment
             </Button>
           )}
