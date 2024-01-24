@@ -27,13 +27,13 @@ const EditUserScreen = () => {
     lastName: z.string().min(2, "Too Short!").max(50, "Too Long!"),
     email: z.string().email("Invalid email"),
     password: isCreatingNewUser ? z.string().min(8, "Too Short!").max(50, "Too Long!") : z.string().optional(),
-    phone: z.string().min(6, "Too Short!").max(50, "Too Long!"),
+    phone: z.string().min(8, "Too Short!").max(50, "Too Long!"),
   });
 
   const { control, handleSubmit, formState, reset, setValue } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      password: "123456",
+      password: "12345678",
       firstName: "",
       lastName: "",
       email: "",
