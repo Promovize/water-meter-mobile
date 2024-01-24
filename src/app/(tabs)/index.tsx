@@ -7,6 +7,8 @@ import { useAuth } from "@/contexts/AuthProvider";
 import { FlatList } from "react-native";
 import ListItem, { InvoiceStatus } from "@/components/common/ListItem";
 import ListItemSeparator from "@/components/common/ListItemSeparator";
+import NewLeakageFab from "@/components/common/NewLeakageFab";
+import { Link, useRouter } from "expo-router";
 
 export const invoices = [
   {
@@ -112,6 +114,7 @@ export const invoices = [
 const HomeScreen = () => {
   const { user } = useAuth();
   const cardNumber = "1234 **** **** 3456";
+  const router = useRouter();
 
   const statusToColor = (status: InvoiceStatus) => {
     switch (status) {
@@ -166,6 +169,11 @@ const HomeScreen = () => {
           )}
         />
       </View>
+      <NewLeakageFab
+        onPress={() => {
+          router.push("/(tabs)/scan/leakage");
+        }}
+      />
     </View>
   );
 };
