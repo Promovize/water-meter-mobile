@@ -24,3 +24,14 @@ export const getHistory = async (userId: string): Promise<any> => {
   if (error) throw error;
   return data;
 };
+
+export const getUserCounters = async (userId: string): Promise<any> => {
+  const { data, error } = await supabase
+    .from("meter_numbers")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return data;
+};

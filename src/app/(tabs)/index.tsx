@@ -226,10 +226,12 @@ const styles = StyleSheet.create({
   },
   invoices: {
     width: "100%",
+    paddingBottom: 370,
   },
   invoicesTitle: {
     fontWeight: "bold",
     textTransform: "uppercase",
     textAlign: "left",
+    marginBottom: 10,
   },
 });
