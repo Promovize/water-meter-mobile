@@ -9,6 +9,7 @@ import axios from "axios";
 import { getErrorMessage } from "@/utils/errorHandler";
 import { boxShaddow } from "@/utils/styles";
 import { defaultColors } from "@/components/theme/colors";
+import { Screen } from "@/components/Screen";
 
 enum Status {
   Blurry = "BLURRY",
@@ -53,7 +54,7 @@ const ImageScreen = () => {
         },
       });
 
-      setResult(Array.isArray(data) ? data[0]["0"] : data);
+      setResult(Array.isArray(data) ? data[0] : data);
       setProcessing(false);
       Alert.alert("Image uploaded and processed successfully");
     } catch (error: any) {
@@ -70,8 +71,10 @@ const ImageScreen = () => {
       router.push("/(tabs)/activities/");
     }, 1000);
   };
-  const receivedData: any = result?.["0"] ? result?.["0"] : result;
-  const meter = (result as any)?.meter;
+
+  console.log({ result });
+  const receivedData: any = result;
+  const meter = (receivedData as any)?.meter_numbers;
 
   const statusToColor = (status: Status) => {
     switch (status) {
@@ -101,68 +104,72 @@ const ImageScreen = () => {
   const canPay = receivedData?.status === "SUCCESS";
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text variant='titleLarge' style={styles.title}>
-          Image Processing
-        </Text>
-      </View>
-      <Image source={{ uri: imageUri }} style={styles.image} />
-      {!receivedData && (
-        <View style={styles.buttonsWrapper}>
-          <Button mode='contained' onPress={() => router.back()} style={styles.button} disabled={processing}>
-            Retake
-          </Button>
-          <Button mode='contained' onPress={uploadImageForProcessing} style={styles.button} loading={processing}>
-            Next
-          </Button>
+    <Screen>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text variant='titleLarge' style={styles.title}>
+            Image Processing
+          </Text>
         </View>
-      )}
-      <View style={styles.processingWrapper}>{processing && <Text>Processing the image, please wait...</Text>}</View>
-
-      {receivedData && canPay && <Text style={styles.duePayment}>Due payment: RWF 2000</Text>}
-      {receivedData && (
-        <View style={styles.pressedDataWrapper}>
-          <View style={styles.pressedData}>
-            <Text variant='titleMedium'>Meter Number:</Text>
-            <Text>{meter?.name || "-"}</Text>
-          </View>
-          <View style={styles.pressedData}>
-            <Text variant='titleMedium'>Meter Reading:</Text>
-            <Text>{receivedData?.meter_reading || "-"}</Text>
-          </View>
-          <View style={styles.pressedData}>
-            <Text variant='titleMedium'>Meter Type:</Text>
-            <Text>{receivedData?.meter_type || "-"}</Text>
-          </View>
-          <View style={styles.pressedData}>
-            <Text variant='titleMedium'>Meter status:</Text>
-            <Text
-              style={{
-                color: statusToColor(receivedData?.status),
-                fontWeight: "bold",
-                fontSize: 16,
-              }}
-            >
-              {statusToText(receivedData?.status) || "-"}
-            </Text>
-          </View>
-        </View>
-      )}
-
-      {receivedData && (
-        <View style={styles.buttonsWrapper}>
-          <Button mode='contained' onPress={() => router.back()}>
-            Cancel
-          </Button>
-          {canPay && (
-            <Button onPress={handlePayment} mode='contained' loading={paying}>
-              Proceed to payment
+        <Image source={{ uri: imageUri }} style={styles.image} />
+        {!receivedData && (
+          <View style={styles.buttonsWrapper}>
+            <Button mode='contained' onPress={() => router.back()} style={styles.button} disabled={processing}>
+              Retake
             </Button>
-          )}
+            <Button mode='contained' onPress={uploadImageForProcessing} style={styles.button} loading={processing}>
+              Next
+            </Button>
+          </View>
+        )}
+        <View style={styles.processingWrapper}>
+          {processing && <Text variant='titleMedium'>Processing the image, please wait...</Text>}
         </View>
-      )}
-    </View>
+
+        {receivedData && canPay && <Text style={styles.duePayment}>Due payment: RWF 2000</Text>}
+        {receivedData && (
+          <View style={styles.pressedDataWrapper}>
+            <View style={styles.pressedData}>
+              <Text variant='titleMedium'>Meter Number:</Text>
+              <Text>{meter?.name || "-"}</Text>
+            </View>
+            <View style={styles.pressedData}>
+              <Text variant='titleMedium'>Meter Reading:</Text>
+              <Text>{receivedData?.meter_reading || "-"}</Text>
+            </View>
+            <View style={styles.pressedData}>
+              <Text variant='titleMedium'>Meter Type:</Text>
+              <Text>{receivedData?.meter_type || "-"}</Text>
+            </View>
+            <View style={styles.pressedData}>
+              <Text variant='titleMedium'>Meter status:</Text>
+              <Text
+                style={{
+                  color: statusToColor(receivedData?.status),
+                  fontWeight: "bold",
+                  fontSize: 16,
+                }}
+              >
+                {statusToText(receivedData?.status) || "-"}
+              </Text>
+            </View>
+          </View>
+        )}
+
+        {receivedData && (
+          <View style={styles.buttonsWrapper}>
+            <Button mode='contained' onPress={() => router.back()}>
+              Cancel
+            </Button>
+            {canPay && (
+              <Button onPress={handlePayment} mode='contained' loading={paying}>
+                Proceed to payment
+              </Button>
+            )}
+          </View>
+        )}
+      </View>
+    </Screen>
   );
 };
 
@@ -172,7 +179,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    padding: 20,
   },
 
   image: {

@@ -92,7 +92,7 @@ const ActivitiesScreen = () => {
             status={statusToText(item.status as Status)}
             statusColor={statusToColor(item.status as Status)}
             title={`Meter No ${convertMeterNumber(item.meter_numbers?.name || "") || "-"} `}
-            subtitle={`FRW ${item.amount || "2000"}`}
+            subtitle={item.meter_numbers?.name ? `FRW ${item.amount || "2000"}` : "-"}
             icon={statusToIcon(item.status as Status)}
           />
         )}

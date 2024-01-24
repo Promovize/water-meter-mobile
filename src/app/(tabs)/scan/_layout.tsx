@@ -6,7 +6,7 @@ const ScanLayout = () => {
   return (
     <Stack>
       <Stack.Screen name='index' options={{ headerShown: false }} />
-      <Stack.Screen name='image' options={{ headerShown: false, presentation: "modal" }} />
+      <Stack.Screen name='image' options={{ headerShown: false }} />
     </Stack>
   );
 };
