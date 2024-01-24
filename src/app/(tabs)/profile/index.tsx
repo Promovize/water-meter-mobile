@@ -7,7 +7,7 @@ import { Route } from "@/constants/Route";
 import chroma from "chroma-js";
 import { defaultColors } from "@/components/theme/colors";
 import { Image } from "expo-image";
-import { useAuth } from "@/contexts/AuthProvider";
+import { UserRole, useAuth } from "@/contexts/AuthProvider";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { boxShaddow } from "@/utils/styles";
@@ -39,6 +39,7 @@ const ProfileScreen = () => {
   };
 
   const paddinTop = insets.top + 20;
+  const isUserAdmin = user?.role === UserRole.Admin;
 
   return (
     <View style={{ flex: 1, paddingBottom: insets.bottom + 20 + 80 }}>
@@ -102,19 +103,21 @@ const ProfileScreen = () => {
         </View>
         <ListItemSeparator />
         <View style={styles.menuList}>
-          <List.Section>
-            <List.Subheader>MANAGE USERS</List.Subheader>
-            <List.Item
-              title='List of users'
-              onPress={() => router.push("/(tabs)/profile/admin/users/list")}
-              left={() => <List.Icon icon='home' />}
-            />
-            <List.Item
-              title='Create new user'
-              onPress={() => router.push("/(tabs)/profile/admin/users/new")}
-              left={() => <List.Icon color={MD3Colors.tertiary70} icon='folder' />}
-            />
-          </List.Section>
+          {isUserAdmin && (
+            <List.Section>
+              <List.Subheader>MANAGE USERS</List.Subheader>
+              <List.Item
+                title='List of users'
+                onPress={() => router.push("/(tabs)/profile/admin/users/list")}
+                left={() => <List.Icon icon='home' />}
+              />
+              <List.Item
+                title='Create new user'
+                onPress={() => router.push("/(tabs)/profile/admin/users/new")}
+                left={() => <List.Icon color={MD3Colors.tertiary70} icon='folder' />}
+              />
+            </List.Section>
+          )}
           <List.Section>
             <List.Subheader>MANAGE TRANSACTIONS</List.Subheader>
             <List.Item title='List of transactions' left={() => <List.Icon icon='folder' />} />
