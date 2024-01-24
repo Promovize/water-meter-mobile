@@ -72,7 +72,6 @@ const ImageScreen = () => {
     }, 1000);
   };
 
-  console.log({ result });
   const receivedData: any = result;
   const meter = (receivedData as any)?.meter_numbers;
 

@@ -25,8 +25,6 @@ const ActivitiesScreen = () => {
   } = useSWR(user ? "history" : null, () => getHistory(user?.id as string));
   const isLoading = !scansHistory && !error;
 
-  console.log({ scansHistory: scansHistory?.[0] });
-
   const statusToColor = (status: Status) => {
     switch (status) {
       case Status.Blurry:
