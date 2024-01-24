@@ -1,26 +1,25 @@
 import { StyleSheet, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Button, Text, useTheme } from "react-native-paper";
 import { Link, useRouter } from "expo-router";
 import { Image } from "expo-image";
 
 const WelcomeScreen = () => {
   const { colors } = useTheme();
-
   const router = useRouter();
 
   return (
-    <View style={[styles.container, {}]}>
+    <View style={styles.container}>
       <View style={styles.wrapper}>
         <View style={styles.logoWrapper}>
           <Image source={require("@/assets/images/logo.png")} style={{ width: 200, height: 200 }} />
         </View>
         <View style={styles.heroText}>
           <Text variant='headlineLarge' style={styles.welcomeText}>
-            Welcome to AquaIntel
+            Welcome to DropDetect
           </Text>
           <Text variant='bodyMedium' style={styles.welcomeTextBody}>
-            Effortlessly monitor your water usage. Simple, smart, and sustainable. AquaIntel - every drop counts."
+            Effortlessly monitor your water usage. Simple, smart, and sustainable. DropDetect - every drop counts."
           </Text>
         </View>
         <View style={styles.buttonWrapper}>
@@ -29,6 +28,7 @@ const WelcomeScreen = () => {
           </Button>
         </View>
       </View>
+
       <View style={styles.poweredBy}>
         <Text variant='bodyMedium' style={styles.poweredByText}>
           Powered by
@@ -57,6 +57,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: "relative",
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.2)", // change this color and opacity as needed
   },
   wrapper: {
     flex: 1,
@@ -93,7 +97,5 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
   },
-  poweredByText: {
-    fontWeight: "600",
-  },
+  poweredByText: {},
 });
