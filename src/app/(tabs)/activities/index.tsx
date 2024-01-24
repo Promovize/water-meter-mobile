@@ -5,7 +5,7 @@ import ListItemSeparator from "@/components/common/ListItemSeparator";
 import ListItem from "@/components/common/ListItem";
 import { defaultColors } from "@/components/theme/colors";
 
-enum Status {
+export enum Status {
   Blurry = "BLURRY",
   NoMeter = "NO_METER",
   NoMeterDetails = "NO_METER_DETAILS",
@@ -33,6 +33,32 @@ const ActivitiesScreen = () => {
     }
   };
 
+  const statusToIcon = (status: Status) => {
+    switch (status) {
+      case Status.Blurry:
+        return "eye-slash";
+      case Status.NoMeter:
+        return "exclamation-triangle";
+      case Status.NoMeterDetails:
+        return "exclamation-triangle";
+      case Status.Success:
+        return "check";
+    }
+  };
+
+  const statusToText = (status: Status) => {
+    switch (status) {
+      case Status.Blurry:
+        return "Blurry";
+      case Status.NoMeter:
+        return "No Meter visible";
+      case Status.NoMeterDetails:
+        return "No Meter Details";
+      case Status.Success:
+        return "Success";
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.history}>
@@ -47,10 +73,11 @@ const ActivitiesScreen = () => {
           renderItem={({ item }) => (
             <ListItem
               date={item.date}
-              status={item.status}
+              status={statusToText(item.status as Status)}
               statusColor={statusToColor(item.status as Status)}
               title={`Meter No ${item.meterNumber}`}
               subtitle={`FRW ${item.amount}`}
+              icon={statusToIcon(item.status as Status)}
             />
           )}
         />

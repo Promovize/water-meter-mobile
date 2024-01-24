@@ -39,6 +39,7 @@ export type User = {
   role: UserRole;
   email: string;
   phone: string;
+  solde: number;
 };
 
 const AuthProvider = (props: Props) => {
@@ -73,7 +74,7 @@ const AuthProvider = (props: Props) => {
 
       const { data, error, status } = await supabase
         .from("profiles")
-        .select(`id, website, avatar_url, full_name, email, phone, role`)
+        .select(`id, website, avatar_url, full_name, email, phone, role, solde`)
         .eq("id", userId)
         .single();
 

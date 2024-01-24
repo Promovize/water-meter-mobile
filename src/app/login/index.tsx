@@ -1,7 +1,7 @@
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import { Button, Text, TextInput } from "react-native-paper";
-import { Link, router, useRouter } from "expo-router";
+import { Link, Redirect, router, useRouter } from "expo-router";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
@@ -9,6 +9,7 @@ import { Screen } from "@/components/Screen";
 import { supabase } from "@/lib/supabase";
 import { KeyboardAvoidingView } from "react-native";
 import { Platform } from "react-native";
+import { useAuth } from "@/contexts/AuthProvider";
 
 const schema = z.object({
   email: z.string().email(),
@@ -19,6 +20,8 @@ const LoginScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { session } = useAuth();
+
   const {
     control,
     handleSubmit,
@@ -44,6 +47,8 @@ const LoginScreen = () => {
     if (userData) setLoading(false);
     router.push("/(tabs)/");
   };
+
+  if (session) return <Redirect href='/(tabs)/' />;
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.mainContainer}>

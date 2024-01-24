@@ -122,6 +122,10 @@ const HomeScreen = () => {
     }
   };
 
+  const convertNumber = (number: number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground source={require("../../assets/images/card-bg.jpeg")} style={styles.card}>
@@ -131,7 +135,7 @@ const HomeScreen = () => {
             <Text variant='titleSmall' style={styles.currency}>
               FRW
             </Text>{" "}
-            1.000.000
+            {convertNumber(user?.solde || 0)}
           </Text>
         </View>
         <View style={styles.cardNumberContainer}>

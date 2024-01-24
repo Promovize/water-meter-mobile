@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CamaraHeader from "@/components/camera/CamaraHeader";
 import CameraFooter from "@/components/camera/CameraFooter";
 import CornerBorderSquare from "@/components/camera/CornerBorderSquare";
-import { useNavigation, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 
 const ScanScreen = () => {
   const [flash, setFlash] = useState(false); // [1
@@ -20,7 +20,10 @@ const ScanScreen = () => {
   };
 
   const handleTakePicture = async () => {
-    const photo = await cameraRef.current?.takePictureAsync();
+    const photo = await cameraRef.current?.takePictureAsync({
+      quality: 0.5,
+    });
+
     router.push({
       pathname: "/(tabs)/scan/image",
       params: {

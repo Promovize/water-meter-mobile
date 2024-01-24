@@ -4,7 +4,12 @@ import { RouteProp, useRoute } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { Button, Text } from "react-native-paper";
 import { useRouter } from "expo-router";
-import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/contexts/AuthProvider";
+import axios from "axios";
+import { getErrorMessage } from "@/utils/errorHandler";
+import { Status } from "../activities";
+import { boxShaddow } from "@/utils/styles";
+import { defaultColors } from "@/components/theme/colors";
 
 type RootStackParamList = {
   Image: { imageUri: string };
@@ -19,22 +24,46 @@ const ImageScreen = () => {
   const [result, setResult] = React.useState<string | null>(null);
   const { imageUri } = route.params;
 
-  const uploadImageForProcessing = async () => {
-    setProcessing(true);
-    const formData = new FormData();
+  const { session } = useAuth();
+  const token = session?.access_token;
+  const url = "https://wltthetqeqixvwuvldaf.supabase.co/functions/v1/send-image-to-openai";
 
-    const { data, error } = await supabase.functions.invoke("upload_for_image_processing", {
-      body: formData,
-    });
-    if (error) {
-      Alert.alert("Error", error.message);
+  const uploadImageForProcessing = async () => {
+    try {
+      setProcessing(true);
+
+      const formData = new FormData();
+      formData.append("file", {
+        uri: imageUri,
+        name: "image.jpg",
+        type: "image/jpeg",
+      } as any);
+
+      const { data } = await axios.post(url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setResult(Array.isArray(data) ? data[0] : data);
       setProcessing(false);
-    }
-    if (data) {
-      setResult(data);
+      Alert.alert("Image uploaded and processed successfully");
+    } catch (error: any) {
+      Alert.alert("Error uploading image", getErrorMessage(error));
       setProcessing(false);
     }
   };
+
+  const handlePayment = async () => {
+    setTimeout(() => {
+      Alert.alert("Payment successful");
+      router.push("/(tabs)");
+    }, 1000);
+  };
+  const receivedData: any = result;
+
+  const canPay = receivedData?.status === "SUCCESS";
 
   return (
     <View style={styles.container}>
@@ -44,14 +73,52 @@ const ImageScreen = () => {
         </Text>
       </View>
       <Image source={{ uri: imageUri }} style={styles.image} />
-      <View style={styles.buttonsWrapper}>
-        <Button mode='contained' onPress={() => router.back()} style={styles.button} disabled={processing}>
-          Retake
-        </Button>
-        <Button mode='contained' onPress={() => {}} style={styles.button} loading={processing}>
-          Next
-        </Button>
-      </View>
+      {!receivedData && (
+        <View style={styles.buttonsWrapper}>
+          <Button mode='contained' onPress={() => router.back()} style={styles.button} disabled={processing}>
+            Retake
+          </Button>
+          <Button mode='contained' onPress={uploadImageForProcessing} style={styles.button} loading={processing}>
+            Next
+          </Button>
+        </View>
+      )}
+      <View style={styles.processingWrapper}>{processing && <Text>Processing the image, please wait...</Text>}</View>
+
+      {receivedData && canPay && <Text style={styles.duePayment}>Due payment: RWF 2000</Text>}
+      {receivedData && (
+        <View style={styles.pressedDataWrapper}>
+          <View style={styles.pressedData}>
+            <Text variant='titleMedium'>Meter Number:</Text>
+            <Text>1234567</Text>
+          </View>
+          <View style={styles.pressedData}>
+            <Text variant='titleMedium'>Meter Reading:</Text>
+            <Text>{receivedData?.meter_reading || "-"}</Text>
+          </View>
+          <View style={styles.pressedData}>
+            <Text variant='titleMedium'>Meter Type:</Text>
+            <Text>{receivedData?.meter_type || "-"}</Text>
+          </View>
+          <View style={styles.pressedData}>
+            <Text variant='titleMedium'>Meter status:</Text>
+            <Text>{receivedData?.status || "-"}</Text>
+          </View>
+        </View>
+      )}
+
+      {receivedData && (
+        <View style={styles.buttonsWrapper}>
+          <Button mode='contained' onPress={() => router.back()}>
+            Cancel
+          </Button>
+          {canPay && (
+            <Button onPress={handlePayment} mode='contained'>
+              Proceed to payment
+            </Button>
+          )}
+        </View>
+      )}
     </View>
   );
 };
@@ -87,5 +154,30 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: "center",
+  },
+  processingWrapper: {
+    marginTop: 20,
+  },
+
+  pressedDataWrapper: {
+    marginTop: 20,
+    gap: 20,
+    padding: 20,
+    backgroundColor: "#fff",
+    width: "100%",
+    borderRadius: 10,
+    ...boxShaddow,
+  },
+
+  pressedData: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 20,
+  },
+  duePayment: {
+    marginTop: 20,
+    fontWeight: "bold",
+    fontSize: 20,
+    color: defaultColors.error,
   },
 });
