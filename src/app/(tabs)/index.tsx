@@ -131,11 +131,18 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={require("../../assets/images/card-bg.jpeg")} style={styles.card}>
+      <ImageBackground
+        source={require("../../assets/images/card-bg.jpeg")}
+        style={styles.card}
+      >
         <View style={styles.cardHeader}>
-          <Image source={require("../../assets/images/Visa.png")} style={styles.visaLogo} contentFit='contain' />
-          <Text variant='titleSmall' style={styles.solde}>
-            <Text variant='titleSmall' style={styles.currency}>
+          <Image
+            source={require("../../assets/images/Visa.png")}
+            style={styles.visaLogo}
+            contentFit="contain"
+          />
+          <Text variant="titleSmall" style={styles.solde}>
+            <Text variant="titleSmall" style={styles.currency}>
               FRW
             </Text>{" "}
             {convertNumber(user?.solde || 0)}
@@ -144,12 +151,12 @@ const HomeScreen = () => {
         <View style={styles.cardNumberContainer}>
           <Text style={styles.cardNumber}>{cardNumber}</Text>
         </View>
-        <Text variant='titleSmall' style={styles.names}>
+        <Text variant="titleSmall" style={styles.names}>
           {user?.full_name}
         </Text>
       </ImageBackground>
       <View style={styles.invoices}>
-        <Text variant='titleSmall' style={styles.invoicesTitle}>
+        <Text variant="titleSmall" style={styles.invoicesTitle}>
           Invoices
         </Text>
         <FlatList
@@ -160,20 +167,16 @@ const HomeScreen = () => {
           renderItem={({ item }) => (
             <ListItem
               date={item.date}
-              status='Success'
+              status="Success"
               statusColor={statusToColor(item.status as InvoiceStatus)}
               title={`Meter No ${item.meterNumber}`}
               subtitle={`FRW ${item.amount}`}
-              icon='exchange'
+              icon="exchange"
             />
           )}
         />
       </View>
-      <NewLeakageFab
-        onPress={() => {
-          router.push("/(tabs)/scan/leakage");
-        }}
-      />
+      <NewLeakageFab />
     </View>
   );
 };

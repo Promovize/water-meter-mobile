@@ -1,14 +1,131 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
+import * as Location from "expo-location";
+import MapView from "react-native-maps";
+import { Button } from "react-native-paper";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { supabase } from "@/lib/supabase";
+import { useRouter } from "expo-router";
+import { useAuth } from "@/contexts/AuthProvider";
+import { decode } from "base-64";
+import * as FileSystem from "expo-file-system";
+
+type RootStackParamList = {
+  Image: { imageUri: string };
+};
+
+type ImageScreenRouteProp = RouteProp<RootStackParamList, "Image">;
 
 const LeakageSubmitScreen = () => {
+  const route = useRoute<ImageScreenRouteProp>();
+  const [location, setLocation] = useState<Location | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [progress, setProgress] = useState<number>(0);
+  const [sending, setSending] = useState<boolean>(false);
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const { imageUri } = route.params;
+
+  useEffect(() => {
+    handleRequestPermission();
+  }, []);
+
+  let text = "Waiting..";
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
+
+  const handleRequestPermission = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    setLocation(location as any);
+  };
+
+  const handleSendLocation = async () => {
+    try {
+      setSending(true);
+      const uploadedImage = await handleUploadImage();
+
+      const { error } = await supabase.from("leakages").insert([
+        {
+          location: location?.coords,
+          image_url: uploadedImage.publicUrl,
+          image_id: uploadedImage.id,
+        },
+      ]);
+      if (error) {
+        throw error;
+      }
+      setSending(false);
+      Alert.alert("Success", "Your report has been sent");
+      router.push("/(tabs)/");
+    } catch (error: any) {
+      setSending(false);
+      Alert.alert("Error", error.message);
+    }
+  };
+
+  const handleUploadImage = async () => {
+    const base64 = await FileSystem.readAsStringAsync(imageUri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    const buffer = decode(base64);
+    const fileExt = imageUri.split(".").pop()!;
+
+    const { data, error } = await supabase.storage
+      .from("histories")
+      .upload(`leakage-${Date.now()}.${fileExt}`, buffer, {
+        contentType: `image/${fileExt}`,
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      id: data?.id!,
+      publicUrl: data?.publicURL!,
+    };
+  };
+
   return (
-    <View>
-      <Text>LeakageSubmitScreen</Text>
+    <View style={styles.container}>
+      {errorMsg && (
+        <Button onPress={handleRequestPermission}>
+          Please allow location permission
+        </Button>
+      )}
+      <View style={styles.header}>
+        <Button mode="contained" onPress={handleSendLocation} loading={sending}>
+          Send current location
+        </Button>
+      </View>
+      <MapView style={styles.map} />
     </View>
   );
 };
 
 export default LeakageSubmitScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    paddingVertical: 20,
+  },
+  map: {
+    width: "100%",
+    height: "100%",
+    marginTop: 20,
+  },
+  header: {
+    paddingHorizontal: 20,
+  },
+});

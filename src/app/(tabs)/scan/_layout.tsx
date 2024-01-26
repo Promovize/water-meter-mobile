@@ -8,7 +8,12 @@ const ScanLayout = () => {
       <Stack.Screen name='index' options={{ headerShown: false }} />
       <Stack.Screen name='image' options={{ headerShown: false }} />
       <Stack.Screen name='leakage' options={{ headerShown: false }} />
-      <Stack.Screen name='leakage-submit' options={{ headerShown: false }} />
+      <Stack.Screen
+        name='leakage-submit'
+        options={{
+          title: "Submit Leakage Details",
+        }}
+      />
     </Stack>
   );
 };
