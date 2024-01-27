@@ -84,7 +84,6 @@ const AuthProvider = (props: Props) => {
 
       if (data) {
         setProfile(data);
-        router.replace(Route.Home);
       }
     } catch (error) {
       if (error instanceof Error) {

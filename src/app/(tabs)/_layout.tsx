@@ -9,7 +9,11 @@ import { Text } from "react-native-paper";
 import { Route } from "@/constants/Route";
 import { useAuth } from "@/contexts/AuthProvider";
 import { boxShaddow } from "@/utils/styles";
-import Animated, { useSharedValue, useAnimatedStyle, withSpring } from "react-native-reanimated";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from "react-native-reanimated";
 import { triggerLightImpact } from "@/utils/haptics";
 import LoadingContainer from "@/components/LoadingContainer";
 
@@ -53,13 +57,13 @@ export default function TabLayout() {
       })}
     >
       <Tabs.Screen
-        name='index'
+        name="index"
         options={{
           title: "Home",
           tabBarIcon: ({ focused }) => (
             <TabItem
-              icon='home'
-              title='Home'
+              icon="home"
+              title="Home"
               active={focused}
               onPress={() => {
                 router.push("/(tabs)/");
@@ -69,13 +73,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name='transactions/index'
+        name="transactions/index"
         options={{
           title: "Transactions",
           tabBarIcon: ({ focused }) => (
             <TabItem
-              icon='exchange'
-              title='Transactions'
+              icon="exchange"
+              title="Transactions"
               active={focused}
               onPress={() => {
                 router.push("/(tabs)/transactions");
@@ -85,7 +89,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name='scan'
+        name="scan"
         options={{
           title: "Scan",
           headerShown: false,
@@ -99,31 +103,43 @@ export default function TabLayout() {
                 justifyContent: "center",
               }}
             >
-              <Pressable style={styles.scanButton} onPress={() => router.push("/(tabs)/scan")}>
-                <AntDesign name='scan1' size={30} color={defaultColors.secondary} />
+              <Pressable
+                style={styles.scanButton}
+                onPress={() => router.push("/(tabs)/scan")}
+              >
+                <AntDesign
+                  name="scan1"
+                  size={30}
+                  color={defaultColors.secondary}
+                />
               </Pressable>
             </View>
           ),
         }}
       />
       <Tabs.Screen
-        name='activities/index'
+        name="activities"
         options={{
           title: "Activity",
           tabBarIcon: ({ focused }) => (
-            <TabItem icon='bell' title='Activity' active={focused} onPress={() => router.push("/(tabs)/activities")} />
+            <TabItem
+              icon="bell"
+              title="Activity"
+              active={focused}
+              onPress={() => router.push("/(tabs)/activities")}
+            />
           ),
         }}
       />
       <Tabs.Screen
-        name='profile'
+        name="profile"
         options={{
           title: "Profile",
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <TabItem
-              icon='user'
-              title='Profile'
+              icon="user"
+              title="Profile"
               active={focused}
               onPress={() => {
                 router.push("/(tabs)/profile");
@@ -163,7 +179,11 @@ const TabItem = ({ title, icon, active, onPress }: TabItemProps) => {
   return (
     <Pressable style={styles.tabItem} onPress={handlePress}>
       <Animated.View style={[animatedStyle, styles.tabItem]}>
-        <FontAwesome name={icon} size={24} color={active ? defaultColors.primary : defaultColors.gray400} />
+        <FontAwesome
+          name={icon}
+          size={24}
+          color={active ? defaultColors.primary : defaultColors.gray400}
+        />
         <Text
           style={{
             color: active ? defaultColors.primary : defaultColors.gray400,

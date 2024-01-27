@@ -9,6 +9,7 @@ import ListItem, { InvoiceStatus } from "@/components/common/ListItem";
 import ListItemSeparator from "@/components/common/ListItemSeparator";
 import NewLeakageFab from "@/components/common/NewLeakageFab";
 import { Link, useRouter } from "expo-router";
+import InvoicesList from "@/components/InvoicesList";
 
 export const invoices = [
   {
@@ -155,27 +156,7 @@ const HomeScreen = () => {
           {user?.full_name}
         </Text>
       </ImageBackground>
-      <View style={styles.invoices}>
-        <Text variant="titleSmall" style={styles.invoicesTitle}>
-          Invoices
-        </Text>
-        <FlatList
-          data={invoices}
-          ItemSeparatorComponent={ListItemSeparator}
-          keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <ListItem
-              date={item.date}
-              status="Success"
-              statusColor={statusToColor(item.status as InvoiceStatus)}
-              title={`Meter No ${item.meterNumber}`}
-              subtitle={`FRW ${item.amount}`}
-              icon="exchange"
-            />
-          )}
-        />
-      </View>
+      <InvoicesList />
       <NewLeakageFab />
     </View>
   );

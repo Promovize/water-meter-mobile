@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import { defaultColors } from "../theme/colors";
 import { Text } from "react-native-paper";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -7,8 +7,8 @@ import { StyleSheet } from "react-native";
 import moment from "moment";
 
 export enum InvoiceStatus {
-  Success = "Success",
-  Failed = "Failed",
+  Success = "SUCCESS",
+  Failed = "FAILED",
 }
 
 export type Invoice = {
@@ -23,36 +23,45 @@ type InvoiceItemProps = {
   title: string;
   subtitle: string;
   date: Date;
-  status: string;
+  status: string | JSX.Element;
   statusColor?: string;
   icon?: React.ComponentProps<typeof FontAwesome>["name"];
+  onPress?: () => void;
 };
 
 const ListItem = (props: InvoiceItemProps) => {
-  const { date, status, statusColor, subtitle, title, icon = "history" } = props;
+  const {
+    date,
+    status,
+    statusColor,
+    subtitle,
+    title,
+    icon = "history",
+    onPress,
+  } = props;
 
   return (
-    <View style={styles.listItemContainer}>
+    <Pressable style={styles.listItemContainer} onPress={onPress}>
       <View style={styles.iconWrapper}>
         <FontAwesome name={icon} size={24} color={defaultColors.primary} />
       </View>
       <View style={styles.listItemDetails}>
         <View style={styles.itemUp}>
-          <Text variant='titleMedium' numberOfLines={1}>
+          <Text variant="titleMedium" numberOfLines={1}>
             {title}
           </Text>
-          <Text variant='titleMedium'>{subtitle}</Text>
+          <Text variant="titleMedium">{subtitle}</Text>
         </View>
         <View style={styles.itemDown}>
-          <Text variant='titleSmall' style={{ color: statusColor }}>
+          <Text variant="titleSmall" style={{ color: statusColor }}>
             {status}
           </Text>
-          <Text variant='titleSmall' style={styles.date}>
-            {moment(date).format("DD MMM YYYY")}
+          <Text variant="labelSmall" style={styles.date}>
+            {moment(date).format("MMMM DD, YYYY hh:mm A")}
           </Text>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
@@ -90,6 +99,7 @@ const styles = StyleSheet.create({
   },
   date: {
     color: defaultColors.gray500,
+    fontWeight: "bold",
   },
 });
 
