@@ -180,7 +180,10 @@ const ImageScreen = () => {
     }
   };
 
-  const canPay = receivedData?.status === "SUCCESS";
+  const canPay =
+    receivedData?.status === "SUCCESS" &&
+    !receivedData?.is_paid &&
+    receivedData?.amount > 0;
   const isInitalScan = scansHistory.length === 0;
 
   return (
