@@ -183,7 +183,8 @@ const ImageScreen = () => {
   const canPay =
     receivedData?.status === "SUCCESS" &&
     !receivedData?.is_paid &&
-    receivedData?.amount > 0;
+    receivedData?.amount > 0 &&
+    receivedData.meter_number_id;
   const isInitalScan = scansHistory.length === 0;
 
   return (
