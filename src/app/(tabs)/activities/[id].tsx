@@ -35,7 +35,11 @@ const ScanDetails = () => {
             <Text variant="titleMedium" style={styles.key}>
               Meter Number:
             </Text>
-            <Text>{currentScan.meter_numbers?.name || "-"}</Text>
+            <Text>
+              {currentScan.meter_numbers?.name ||
+                currentScan.actual_meter_number ||
+                "-"}
+            </Text>
           </View>
           <View style={styles.pressedData}>
             <Text variant="titleMedium" style={styles.key}>

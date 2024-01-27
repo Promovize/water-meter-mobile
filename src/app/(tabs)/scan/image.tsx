@@ -224,18 +224,19 @@ const ImageScreen = () => {
           )}
         </View>
 
-        {receivedData && canPay && (
+        {receivedData && (
           <Text style={styles.duePayment}>
             Due payment: RWF {receivedData?.amount}
           </Text>
         )}
+
         {receivedData && (
           <View style={styles.pressedDataWrapper}>
             <View style={styles.pressedData}>
               <Text variant="titleMedium" style={styles.key}>
                 Meter Number:
               </Text>
-              <Text>{meter?.name || "-"}</Text>
+              <Text>{meter?.name || receivedData?.actual_meter_number}</Text>
             </View>
             <View style={styles.pressedData}>
               <Text variant="titleMedium" style={styles.key}>
@@ -273,13 +274,27 @@ const ImageScreen = () => {
             </Button>
             {canPay && !isInitalScan && (
               <Button
-                onPress={() =>
-                  handlePayment({
-                    amount: receivedData?.amount,
-                    meter_id: receivedData?.meter_number_id,
-                    scan_id: receivedData?.id,
-                  })
-                }
+                onPress={() => {
+                  Alert.alert(
+                    "Confirm Payment",
+                    `Are you sure you want to proceed with the payment of FRW ${receivedData?.amount}?`,
+                    [
+                      {
+                        text: "Cancel",
+                        style: "cancel",
+                      },
+                      {
+                        text: "Confirm",
+                        onPress: () =>
+                          handlePayment({
+                            amount: receivedData?.amount,
+                            meter_id: receivedData?.meter_number_id,
+                            scan_id: receivedData?.id,
+                          }),
+                      },
+                    ]
+                  );
+                }}
                 mode="contained"
                 loading={paying}
               >
