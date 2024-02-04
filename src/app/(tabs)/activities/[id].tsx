@@ -9,6 +9,7 @@ import { defaultColors } from "@/components/theme/colors";
 import { boxShaddow } from "@/utils/styles";
 import { Text } from "react-native-paper";
 import { statusToColor, statusToText } from ".";
+import { Image } from "expo-image";
 
 const ScanDetails = () => {
   const route = useRoute<any>();
@@ -104,6 +105,11 @@ const ScanDetails = () => {
             </Text>
           </View>
         </View>
+        <Image
+          source={{ uri: currentScan.scan_image_url }}
+          style={styles.scanImage}
+          contentFit="contain"
+        />
       </View>
     </View>
   );
@@ -147,5 +153,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
     width: 150,
+  },
+
+  scanImageWrapper: {},
+
+  scanImage: {
+    marginTop: 20,
+    width: "100%",
+    height: 300,
+    borderRadius: 10,
+    resizeMode: "contain",
+    objectFit: "contain",
   },
 });

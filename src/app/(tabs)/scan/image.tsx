@@ -14,16 +14,14 @@ import useSWR from "swr";
 import { getHistory } from "@/api/userFetcher";
 import { supabase } from "@/lib/supabase";
 
+const baseUrl =
+  process.env.BASE_URL || "https://water-meter-api.up.railway.app/api";
+
 enum Status {
   Blurry = "BLURRY",
   NoMeter = "NO_METER",
   NoMeterDetails = "NO_METER_DETAILS",
   Success = "SUCCESS",
-}
-
-enum InvoiceStatus {
-  SUCCESS = "SUCCESS",
-  FAILED = "FAILED",
 }
 
 type RootStackParamList = {
@@ -47,10 +45,9 @@ const ImageScreen = () => {
 
   const { session } = useAuth();
   const token = session?.access_token;
-  const url =
-    "https://wltthetqeqixvwuvldaf.supabase.co/functions/v1/send-image-to-openai";
 
   const uploadImageForProcessing = async () => {
+    const url = `${baseUrl}/upload`;
     try {
       setProcessing(true);
 
@@ -69,11 +66,11 @@ const ImageScreen = () => {
       });
 
       mutate();
-
-      setResult(Array.isArray(data) ? data[0] : data);
+      setResult(data);
       setProcessing(false);
       Alert.alert("Image uploaded and processed successfully");
     } catch (error: any) {
+      console.log({ error });
       Alert.alert("Error uploading image", getErrorMessage(error));
       setProcessing(false);
     }
@@ -86,69 +83,27 @@ const ImageScreen = () => {
   };
 
   const handlePayment = async (data: PaymentData) => {
-    const { amount, meter_id, scan_id } = data;
+    const { scan_id } = data;
     setPaying(true);
     try {
-      const body = {
-        amount,
-        meter_number_id: meter_id,
-        scan_id,
-        status: InvoiceStatus.SUCCESS,
-      };
-
-      const { solde = 0 } = user || {};
-      if (solde < amount) {
-        Alert.alert("Insufficient funds");
-        body.status = InvoiceStatus.FAILED;
-      }
-
-      const { data, error } = await supabase
-        .from("invoices")
-        .insert([body])
-        .select("*");
-
-      if (error) {
-        throw error;
-      }
-
-      const receivedData = data?.[0] as any;
-      const { id } = receivedData;
-
-      const { error: updateScanError } = await supabase
-        .from("history")
-        .update({ is_paid: true })
-        .eq("id", scan_id);
-
-      if (updateScanError) {
-        await revertPayment(id);
-        throw updateScanError;
-      }
-
-      const { error: updateError } = await supabase
-        .from("profiles")
-        .update({ solde: solde - amount })
-        .eq("id", user?.id);
-
-      if (updateError) {
-        await revertPayment(id);
-        throw updateError;
-      }
+      const url = `${baseUrl}/pay`;
+      await axios.post(
+        url,
+        { scan_id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      mutate();
+      supabase.auth.refreshSession();
       Alert.alert("Payment successful");
       router.push("/(tabs)/activities");
     } catch (error) {
       Alert.alert("Error paying", getErrorMessage(error));
     } finally {
       setPaying(false);
-    }
-  };
-
-  const revertPayment = async (id: string) => {
-    const { data: updatedData, error: updateError } = await supabase
-      .from("invoices")
-      .update({ status: InvoiceStatus.FAILED })
-      .eq("id", id);
-    if (updateError) {
-      Alert.alert("Error reverting payment", getErrorMessage(updateError));
     }
   };
 

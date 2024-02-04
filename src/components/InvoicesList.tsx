@@ -16,7 +16,7 @@ const InvoicesList = () => {
     mutate,
     isValidating,
     isLoading,
-  } = useSWR(user ? "history" : null, () => getInvoices(user?.id as string));
+  } = useSWR(user ? "invoices" : null, () => getInvoices(user?.id as string));
 
   const statusToColor = (status: InvoiceStatus) => {
     switch (status) {
