@@ -59,3 +59,30 @@ export const getInvoices = async (userId: string): Promise<any> => {
   if (error) throw error;
   return data;
 };
+
+export const getAllLeakages = async ({
+  from,
+  to,
+}: {
+  from: number;
+  to: number;
+}): Promise<any> => {
+  const { data, error } = await supabase
+    .from("leakages")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .range(from, to);
+
+  if (error) throw error;
+  return data;
+};
+
+export const getSingleLeakage = async (id: string): Promise<any> => {
+  const { data, error } = await supabase
+    .from("leakages")
+    .select("*")
+    .eq("id", id);
+
+  if (error) throw error;
+  return data[0];
+};

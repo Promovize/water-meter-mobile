@@ -1,4 +1,12 @@
-import { Alert, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import { Button, List, MD3Colors, Text } from "react-native-paper";
 import { supabase } from "@/lib/supabase";
@@ -25,8 +33,9 @@ const ProfileScreen = () => {
   const { user } = useAuth();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { data: counters = [], isLoading } = useSWR<Meter[]>(user ? "counters" : null, () =>
-    getUserCounters(user?.id as string),
+  const { data: counters = [], isLoading } = useSWR<Meter[]>(
+    user ? "counters" : null,
+    () => getUserCounters(user?.id as string)
   );
 
   const handleLogout = async () => {
@@ -60,25 +69,14 @@ const ProfileScreen = () => {
               style={{ width: 100, height: 100 }}
             />
           </View>
-          {/* <TouchableOpacity
-          onPress={() => router.push("/(tabs)/profile/edit")}
-          style={[
-            styles.editProfileButton,
-            {
-              top: paddinTop,
-            },
-          ]}
-        >
-          <FontAwesome name='edit' size={24} color='white' />
-        </TouchableOpacity> */}
-          <Text variant='titleLarge' style={styles.userFullname}>
+          <Text variant="titleLarge" style={styles.userFullname}>
             {user?.full_name}
           </Text>
           <View>
-            <Text variant='bodyMedium' style={{ textAlign: "center" }}>
+            <Text variant="bodyMedium" style={{ textAlign: "center" }}>
               {user?.phone}
             </Text>
-            <Text variant='bodyMedium' style={{ textAlign: "center" }}>
+            <Text variant="bodyMedium" style={{ textAlign: "center" }}>
               {user?.email}
             </Text>
           </View>
@@ -107,22 +105,40 @@ const ProfileScreen = () => {
             <List.Section>
               <List.Subheader>MANAGE USERS</List.Subheader>
               <List.Item
-                title='List of users'
+                title="List of users"
                 onPress={() => router.push("/(tabs)/profile/admin/users/list")}
-                left={() => <List.Icon icon='home' />}
+                left={() => <List.Icon icon="home" />}
               />
               <List.Item
-                title='Create new user'
+                title="Create new user"
                 onPress={() => router.push("/(tabs)/profile/admin/users/new")}
-                left={() => <List.Icon color={MD3Colors.tertiary70} icon='folder' />}
+                left={() => (
+                  <List.Icon color={MD3Colors.tertiary70} icon="folder" />
+                )}
+              />
+              <List.Item
+                title="Leakage reports"
+                onPress={() =>
+                  router.push("/(tabs)/profile/admin/leakages/list")
+                }
+                left={() => (
+                  <MaterialCommunityIcons
+                    name="water-off"
+                    size={24}
+                    color={MD3Colors.tertiary70}
+                  />
+                )}
               />
             </List.Section>
           )}
           <List.Section>
             <List.Subheader>MANAGE TRANSACTIONS</List.Subheader>
-            <List.Item title='List of transactions' left={() => <List.Icon icon='folder' />} />
+            <List.Item
+              title="List of transactions"
+              left={() => <List.Icon icon="folder" />}
+            />
           </List.Section>
-          <Button mode='contained' onPress={handleLogout} icon='logout'>
+          <Button mode="contained" onPress={handleLogout} icon="logout">
             Logout
           </Button>
         </View>

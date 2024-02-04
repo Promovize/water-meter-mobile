@@ -13,9 +13,7 @@ import { Screen } from "@/components/Screen";
 import useSWR from "swr";
 import { getHistory } from "@/api/userFetcher";
 import { supabase } from "@/lib/supabase";
-
-const baseUrl =
-  process.env.BASE_URL || "https://water-meter-api.up.railway.app/api";
+import { baseUrl } from "@/utils/constants";
 
 enum Status {
   Blurry = "BLURRY",
@@ -70,7 +68,6 @@ const ImageScreen = () => {
       setProcessing(false);
       Alert.alert("Image uploaded and processed successfully");
     } catch (error: any) {
-      console.log({ error });
       Alert.alert("Error uploading image", getErrorMessage(error));
       setProcessing(false);
     }

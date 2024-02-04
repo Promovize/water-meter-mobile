@@ -9,6 +9,8 @@ import { useRouter } from "expo-router";
 import { useAuth } from "@/contexts/AuthProvider";
 import { decode } from "base-64";
 import * as FileSystem from "expo-file-system";
+import { baseUrl } from "@/utils/constants";
+import axios from "axios";
 
 type RootStackParamList = {
   Image: { imageUri: string };
@@ -23,7 +25,8 @@ const LeakageSubmitScreen = () => {
   const [progress, setProgress] = useState<number>(0);
   const [sending, setSending] = useState<boolean>(false);
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, session } = useAuth();
+  const token = session?.access_token;
 
   const { imageUri } = route.params;
 
@@ -52,18 +55,25 @@ const LeakageSubmitScreen = () => {
   const handleSendLocation = async () => {
     try {
       setSending(true);
-      const uploadedImage = await handleUploadImage();
 
-      const { error } = await supabase.from("leakages").insert([
-        {
-          location: location?.coords,
-          image_url: uploadedImage.publicUrl,
-          image_id: uploadedImage.id,
-        },
-      ]);
-      if (error) {
-        throw error;
+      const formData = new FormData();
+      formData.append("file", {
+        uri: imageUri,
+        name: "image.jpg",
+        type: "image/jpeg",
+      } as any);
+
+      if (location) {
+        formData.append("location", JSON.stringify(location));
       }
+
+      await axios.post(`${baseUrl}/leakage`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       setSending(false);
       Alert.alert("Success", "Your report has been sent");
       router.push("/(tabs)/");
@@ -71,30 +81,6 @@ const LeakageSubmitScreen = () => {
       setSending(false);
       Alert.alert("Error", error.message);
     }
-  };
-
-  const handleUploadImage = async () => {
-    const base64 = await FileSystem.readAsStringAsync(imageUri, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
-
-    const buffer = decode(base64);
-    const fileExt = imageUri.split(".").pop()!;
-
-    const { data, error } = await supabase.storage
-      .from("histories")
-      .upload(`leakage-${Date.now()}.${fileExt}`, buffer, {
-        contentType: `image/${fileExt}`,
-      });
-
-    if (error) {
-      throw error;
-    }
-
-    return {
-      id: data?.id!,
-      publicUrl: data?.publicURL!,
-    };
   };
 
   return (

@@ -9,7 +9,10 @@ type RootStackParamList = {
   AdminScreensLayout: { id: string }; // Define other routes here
 };
 
-type AdminScreensLayoutRouteProp = RouteProp<RootStackParamList, "AdminScreensLayout">;
+type AdminScreensLayoutRouteProp = RouteProp<
+  RootStackParamList,
+  "AdminScreensLayout"
+>;
 
 const AdminScreensLayout = () => {
   const { user } = useAuth();
@@ -19,20 +22,34 @@ const AdminScreensLayout = () => {
 
   if (user?.role !== UserRole.Admin) {
     Alert.alert("You are not authorized to access this page");
-    return <Redirect href='/(tabs)/profile' />;
+    return <Redirect href="/(tabs)/profile" />;
   }
 
   return (
     <Stack>
       <Stack.Screen
-        name='users/list'
+        name="users/list"
         options={{
           title: "Users",
           headerLeft: ({ tintColor }) => <HeaderBack color={tintColor} />,
         }}
       />
       <Stack.Screen
-        name='users/[id]'
+        name="leakages/list"
+        options={{
+          title: "Leakages",
+          headerLeft: ({ tintColor }) => <HeaderBack color={tintColor} />,
+        }}
+      />
+      <Stack.Screen
+        name="leakages/[id]"
+        options={{
+          title: "Leakage Details",
+          presentation: "modal",
+        }}
+      />
+      <Stack.Screen
+        name="users/[id]"
         options={{
           title: isNewUserScreen ? "Create new User" : "Edit User",
           headerLeft: ({ tintColor }) => <HeaderBack color={tintColor} />,
