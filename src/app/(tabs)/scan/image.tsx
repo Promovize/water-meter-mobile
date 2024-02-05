@@ -68,6 +68,7 @@ const ImageScreen = () => {
       setProcessing(false);
       Alert.alert("Image uploaded and processed successfully");
     } catch (error: any) {
+      console.log({ error: error.message });
       Alert.alert("Error uploading image", getErrorMessage(error));
       setProcessing(false);
     }
