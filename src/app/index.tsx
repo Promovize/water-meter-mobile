@@ -54,7 +54,7 @@ const WelcomeScreen = () => {
               },
             ]}
           >
-            WaterBillPay
+            Christian Byamana
           </Text>
         </TouchableOpacity>
       </View>
