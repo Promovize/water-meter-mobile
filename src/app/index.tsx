@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { Button, Text, useTheme } from "react-native-paper";
 import { Link, useRouter } from "expo-router";
 import { Image } from "expo-image";
+import { TouchableOpacity } from "react-native";
+import * as Linking from "expo-linking";
 
 const WelcomeScreen = () => {
   const { colors } = useTheme();
@@ -12,30 +14,39 @@ const WelcomeScreen = () => {
     <View style={styles.container}>
       <View style={styles.wrapper}>
         <View style={styles.logoWrapper}>
-          <Image source={require("@/assets/images/logo.png")} style={{ width: 200, height: 200 }} />
+          <Image
+            source={require("@/assets/images/logo.png")}
+            style={{ width: 200, height: 200 }}
+          />
         </View>
         <View style={styles.heroText}>
-          <Text variant='headlineLarge' style={styles.welcomeText}>
-            Welcome to DropDetect
+          <Text variant="headlineLarge" style={styles.welcomeText}>
+            Welcome to WaterBillPay
           </Text>
-          <Text variant='bodyMedium' style={styles.welcomeTextBody}>
-            Effortlessly monitor your water usage. Simple, smart, and sustainable. DropDetect - every drop counts."
+          <Text variant="bodyMedium" style={styles.welcomeTextBody}>
+            Case Study: YmeJibu - Goma, DRC
           </Text>
         </View>
         <View style={styles.buttonWrapper}>
-          <Button mode='contained' onPress={() => router.push("/login/")}>
+          <Button mode="contained" onPress={() => router.push("/login/")}>
             Get Started
           </Button>
         </View>
       </View>
 
       <View style={styles.poweredBy}>
-        <Text variant='bodyMedium' style={styles.poweredByText}>
+        <Text variant="bodyMedium" style={styles.poweredByText}>
           Powered by
         </Text>
-        <Link href='https://promovize.dev'>
+        <TouchableOpacity
+          onPress={() =>
+            Linking.openURL(
+              "mailto:christianbyamana@gmail.com?subject=WaterBillPay"
+            )
+          }
+        >
           <Text
-            variant='bodyMedium'
+            variant="bodyMedium"
             style={[
               {
                 color: colors.primary,
@@ -43,9 +54,9 @@ const WelcomeScreen = () => {
               },
             ]}
           >
-            Promovize
+            WaterBillPay
           </Text>
-        </Link>
+        </TouchableOpacity>
       </View>
     </View>
   );

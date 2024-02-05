@@ -2,6 +2,7 @@ import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import { Button, Text, TextInput } from "react-native-paper";
 import { Link, Redirect, router, useRouter } from "expo-router";
+import * as Linking from "expo-linking";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
@@ -10,6 +11,7 @@ import { supabase } from "@/lib/supabase";
 import { KeyboardAvoidingView } from "react-native";
 import { Platform } from "react-native";
 import { useAuth } from "@/contexts/AuthProvider";
+import { TouchableOpacity } from "react-native";
 
 const schema = z.object({
   email: z.string().email(),
@@ -48,40 +50,44 @@ const LoginScreen = () => {
     router.push("/(tabs)/");
   };
 
-  if (session) return <Redirect href='/(tabs)/' />;
+  if (session) return <Redirect href="/(tabs)/" />;
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.mainContainer}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.mainContainer}
+    >
       <ScrollView contentContainerStyle={styles.scrollView}>
         <Screen>
           <View style={styles.container}>
             <View style={styles.wrapper}>
               <View style={styles.header}>
                 <Text style={styles.title}>Welcome back</Text>
-                <Text variant='bodyMedium' style={styles.subTitle}>
-                  Ready to make a splash in smart water management? Log in to DropDetect and let's conserve together.
+                <Text variant="bodyMedium" style={styles.subTitle}>
+                  Ready to make a splash in smart water management? Log in to
+                  DropDetect and let's conserve together.
                 </Text>
               </View>
               <View style={styles.form}>
                 <View style={styles.formControl}>
                   <Controller
                     control={control}
-                    name='email'
+                    name="email"
                     render={({ field: { onChange, value } }) => (
                       <TextInput
-                        label='Email'
+                        label="Email"
                         value={value}
-                        autoCapitalize='none'
-                        autoComplete='email'
+                        autoCapitalize="none"
+                        autoComplete="email"
                         onChangeText={onChange}
-                        left={<TextInput.Icon icon='account' />}
-                        mode='outlined'
+                        left={<TextInput.Icon icon="account" />}
+                        mode="outlined"
                         theme={{ roundness: 50 }}
                       />
                     )}
                   />
                   {errors.email && (
-                    <Text variant='labelSmall' style={styles.errorMessage}>
+                    <Text variant="labelSmall" style={styles.errorMessage}>
                       {errors.email.message}
                     </Text>
                   )}
@@ -91,35 +97,51 @@ const LoginScreen = () => {
                     control={control}
                     render={({ field: { onChange, value } }) => (
                       <TextInput
-                        label='Password'
+                        label="Password"
                         secureTextEntry={!passwordVisible}
                         value={value}
                         onChangeText={onChange}
-                        mode='outlined'
+                        mode="outlined"
                         theme={{ roundness: 50 }}
-                        left={<TextInput.Icon icon='lock' />}
-                        right={<TextInput.Icon icon='eye' onPress={() => setPasswordVisible(!passwordVisible)} />}
+                        left={<TextInput.Icon icon="lock" />}
+                        right={
+                          <TextInput.Icon
+                            icon="eye"
+                            onPress={() => setPasswordVisible(!passwordVisible)}
+                          />
+                        }
                       />
                     )}
-                    name='password'
+                    name="password"
                   />
                   {errors.password && (
-                    <Text variant='labelSmall' style={styles.errorMessage}>
+                    <Text variant="labelSmall" style={styles.errorMessage}>
                       {errors.password.message}
                     </Text>
                   )}
                 </View>
-                <Button loading={loading} mode='contained' style={styles.button} onPress={handleSubmit(onSubmit)}>
+                <Button
+                  loading={loading}
+                  mode="contained"
+                  style={styles.button}
+                  onPress={handleSubmit(onSubmit)}
+                >
                   Log In
                 </Button>
               </View>
             </View>
             <View style={styles.footer}>
-              <Text variant='bodyMedium' style={styles.noAccount}>
-                Don't have an account?{" "}
-                <Link href='https://promovize.dev'>
+              <Text variant="bodyMedium" style={styles.noAccount}>
+                Don't have an account? {/* open email to barack@gmail.com */}
+                <TouchableOpacity
+                  onPress={() =>
+                    Linking.openURL(
+                      "mailto:christianbyamana@gmail.com?subject=WaterBillPay"
+                    )
+                  }
+                >
                   <Text
-                    variant='bodyMedium'
+                    variant="bodyMedium"
                     style={[
                       {
                         color: "#007AFF",
@@ -129,7 +151,7 @@ const LoginScreen = () => {
                   >
                     Contact Us
                   </Text>
-                </Link>
+                </TouchableOpacity>
               </Text>
             </View>
           </View>
