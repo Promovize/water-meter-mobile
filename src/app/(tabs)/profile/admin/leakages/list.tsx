@@ -8,6 +8,14 @@ import { boxShaddow } from "@/utils/styles";
 import moment from "moment";
 import { Link } from "expo-router";
 
+export const parseLocation = (location: string) => {
+  try {
+    return JSON.parse(location);
+  } catch (e) {
+    return JSON.parse(location.replace(/'/g, '"'));
+  }
+};
+
 const LeakagesScreen = () => {
   const [page, setPage] = React.useState<number>(0);
   const [numberOfItemsPerPageList] = React.useState([5, 10, 15]);
@@ -33,14 +41,6 @@ const LeakagesScreen = () => {
 
   const convertLocationValues = (value: string) => {
     return value?.toString()?.slice(0, 6) + "...";
-  };
-
-  const parseLocation = (location: string) => {
-    try {
-      return JSON.parse(location);
-    } catch (e) {
-      return JSON.parse(location.replace(/'/g, '"'));
-    }
   };
 
   return (

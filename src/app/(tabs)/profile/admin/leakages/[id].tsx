@@ -7,6 +7,7 @@ import MapView, { Marker } from "react-native-maps";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { parseLocation } from "./list";
 
 const LeakageDetails = () => {
   const route = useRoute<any>();
@@ -32,8 +33,15 @@ const LeakageDetails = () => {
     );
   }
 
-  const coordinates = JSON.parse(leakage?.location);
-  const { coords } = JSON.parse(coordinates);
+  const coordinates = parseLocation(leakage?.location);
+  const { coords } = coordinates || {};
+
+  if (!coords)
+    return (
+      <View>
+        <Text>Invalid coordinates</Text>
+      </View>
+    );
 
   return (
     <View style={styles.container}>
@@ -47,8 +55,8 @@ const LeakageDetails = () => {
         <MapView
           style={styles.map}
           initialRegion={{
-            latitude: coords.latitude,
-            longitude: coords.longitude,
+            latitude: coords?.latitude,
+            longitude: coords?.longitude,
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
           }}
@@ -56,8 +64,8 @@ const LeakageDetails = () => {
         >
           <Marker
             coordinate={{
-              latitude: coords.latitude,
-              longitude: coords.longitude,
+              latitude: coords?.latitude,
+              longitude: coords?.longitude,
             }}
             title="Leakage"
             description="This is the location of the leakage"
