@@ -134,6 +134,7 @@ const ProfileScreen = () => {
           <List.Section>
             <List.Subheader>MANAGE TRANSACTIONS</List.Subheader>
             <List.Item
+              onPress={() => router.push("/(tabs)/transactions")}
               title="List of transactions"
               left={() => <List.Icon icon="folder" />}
             />

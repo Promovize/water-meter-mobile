@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import { Button } from "react-native-paper";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { supabase } from "@/lib/supabase";
@@ -20,7 +20,9 @@ type ImageScreenRouteProp = RouteProp<RootStackParamList, "Image">;
 
 const LeakageSubmitScreen = () => {
   const route = useRoute<ImageScreenRouteProp>();
-  const [location, setLocation] = useState<Location | null>(null);
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null
+  );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [progress, setProgress] = useState<number>(0);
   const [sending, setSending] = useState<boolean>(false);
@@ -95,7 +97,25 @@ const LeakageSubmitScreen = () => {
           Send current location
         </Button>
       </View>
-      <MapView style={styles.map} />
+      <MapView
+        style={styles.map}
+        mapType="hybrid"
+        initialRegion={{
+          latitude: location?.coords.latitude!,
+          longitude: location?.coords.longitude!,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
+        }}
+      >
+        <Marker
+          coordinate={{
+            latitude: location?.coords.latitude!,
+            longitude: location?.coords.longitude!,
+          }}
+          title="Leakage"
+          description="Current location of the leakage"
+        />
+      </MapView>
     </View>
   );
 };

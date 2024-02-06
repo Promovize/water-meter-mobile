@@ -16,6 +16,7 @@ const LeakagesScreen = () => {
   );
   const from = page * itemsPerPage;
   const to = (page + 1) * itemsPerPage;
+
   const {
     data: users = [],
     error,
@@ -31,7 +32,15 @@ const LeakagesScreen = () => {
   const pagedLeakages = users.slice(from, to);
 
   const convertLocationValues = (value: string) => {
-    return value.toString().slice(0, 6) + "...";
+    return value?.toString()?.slice(0, 6) + "...";
+  };
+
+  const parseLocation = (location: string) => {
+    try {
+      return JSON.parse(location);
+    } catch (e) {
+      return JSON.parse(location.replace(/'/g, '"'));
+    }
   };
 
   return (
@@ -65,8 +74,9 @@ const LeakagesScreen = () => {
           )}
 
           {pagedLeakages.map((leakage: any) => {
-            const location = JSON.parse(leakage.location);
-            const { coords } = JSON.parse(location);
+            const location = parseLocation(leakage.location);
+            const { coords } = location;
+
             return (
               <DataTable.Row key={leakage.id}>
                 <DataTable.Cell>
@@ -88,10 +98,10 @@ const LeakagesScreen = () => {
                   </Text>
                 </DataTable.Cell>
                 <DataTable.Cell>
-                  <Text>{convertLocationValues(coords.longitude)}</Text>
+                  <Text>{convertLocationValues(coords?.longitude)}</Text>
                 </DataTable.Cell>
                 <DataTable.Cell>
-                  <Text>{convertLocationValues(coords.latitude)}</Text>
+                  <Text>{convertLocationValues(coords?.latitude)}</Text>
                 </DataTable.Cell>
               </DataTable.Row>
             );
