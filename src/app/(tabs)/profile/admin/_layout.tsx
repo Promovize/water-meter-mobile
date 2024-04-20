@@ -35,6 +35,13 @@ const AdminScreensLayout = () => {
         }}
       />
       <Stack.Screen
+        name="claims/index"
+        options={{
+          title: "Claims",
+          headerLeft: ({ tintColor }) => <HeaderBack color={tintColor} />,
+        }}
+      />
+      <Stack.Screen
         name="leakages/list"
         options={{
           title: "Leakages",

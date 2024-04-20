@@ -107,7 +107,12 @@ const ProfileScreen = () => {
               <List.Item
                 title="List of users"
                 onPress={() => router.push("/(tabs)/profile/admin/users/list")}
-                left={() => <List.Icon icon="home" />}
+                left={() => <List.Icon icon="folder" />}
+              />
+              <List.Item
+                title="Claims"
+                onPress={() => router.push("/(tabs)/profile/admin/claims")}
+                left={() => <List.Icon icon="folder" />}
               />
               <List.Item
                 title="Create new user"
