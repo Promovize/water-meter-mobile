@@ -47,6 +47,19 @@ const ImageScreen = () => {
   const uploadImageForProcessing = async () => {
     const url = `${baseUrl}/upload`;
     try {
+      const currentMonthScans = scansHistory.filter(
+        (scan: any) =>
+          new Date(scan.created_at).getMonth() === new Date().getMonth()
+      );
+      const isAnyPaid = currentMonthScans.some((scan: any) => scan.is_paid);
+
+      if (isAnyPaid) {
+        Alert.alert(
+          "You have already paid for a scan this month, try again next month."
+        );
+        return;
+      }
+
       setProcessing(true);
 
       const formData = new FormData();
