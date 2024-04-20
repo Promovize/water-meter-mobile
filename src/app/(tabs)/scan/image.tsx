@@ -94,6 +94,9 @@ const ImageScreen = () => {
         name: "image.jpg",
         type: "image/jpeg",
       } as any);
+      if (willPayFine) {
+        formData.append("additionalFee", "200");
+      }
 
       const { data } = await axios.post(url, formData, {
         headers: {
@@ -103,7 +106,7 @@ const ImageScreen = () => {
       });
 
       mutate();
-      setResult({ ...data, additionalFee: willPayFine ? 200 : 0 });
+      setResult({ ...data });
       setProcessing(false);
       Alert.alert("Image uploaded and processed successfully");
     } catch (error: any) {
