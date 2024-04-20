@@ -14,6 +14,7 @@ import useSWR from "swr";
 import { getHistory } from "@/api/userFetcher";
 import { supabase } from "@/lib/supabase";
 import { baseUrl } from "@/utils/constants";
+import moment from "moment";
 
 enum Status {
   Blurry = "BLURRY",
@@ -46,19 +47,44 @@ const ImageScreen = () => {
 
   const uploadImageForProcessing = async () => {
     const url = `${baseUrl}/upload`;
-    try {
-      const currentMonthScans = scansHistory.filter(
-        (scan: any) =>
-          new Date(scan.created_at).getMonth() === new Date().getMonth()
-      );
-      const isAnyPaid = currentMonthScans.some((scan: any) => scan.is_paid);
-
-      if (isAnyPaid) {
+    let canScan = true;
+    const confirmPayment = () =>
+      new Promise((resolve) => {
         Alert.alert(
-          "You have already paid for a scan this month, try again next month."
+          "Notice",
+          "You have already paid for a scan in the last 30 days. Are you sure you want to proceed and pay the fine? 200 RWF will be added to the amount of the scan.",
+          [
+            {
+              text: "Cancel",
+              onPress: () => resolve(false),
+              style: "cancel",
+            },
+            {
+              text: "OK",
+              onPress: () => resolve(true),
+            },
+          ],
+          { cancelable: false }
         );
-        return;
+      });
+
+    try {
+      const paidScans = scansHistory.filter((scan: any) => scan.is_paid);
+      const lastPaidScan = paidScans.sort(
+        (a: any, b: any) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      )[0];
+
+      let willPayFine = false;
+      if (
+        lastPaidScan &&
+        moment().diff(moment(lastPaidScan.created_at), "days") < 30
+      ) {
+        willPayFine = (await confirmPayment()) as boolean;
+        canScan = willPayFine;
       }
+
+      if (!canScan) return;
 
       setProcessing(true);
 
@@ -77,7 +103,7 @@ const ImageScreen = () => {
       });
 
       mutate();
-      setResult(data);
+      setResult({ ...data, additionalFee: willPayFine ? 200 : 0 });
       setProcessing(false);
       Alert.alert("Image uploaded and processed successfully");
     } catch (error: any) {
