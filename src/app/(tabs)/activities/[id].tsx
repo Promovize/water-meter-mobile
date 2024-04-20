@@ -7,9 +7,10 @@ import useSWR from "swr";
 import { getHistory } from "@/api/userFetcher";
 import { defaultColors } from "@/components/theme/colors";
 import { boxShaddow } from "@/utils/styles";
-import { Text } from "react-native-paper";
+import { Button, Text } from "react-native-paper";
 import { statusToColor, statusToText } from ".";
 import { Image } from "expo-image";
+import { supabase } from "@/lib/supabase";
 
 const ScanDetails = () => {
   const route = useRoute<any>();
@@ -20,12 +21,30 @@ const ScanDetails = () => {
     user ? "history" : null,
     () => getHistory(user?.id as string)
   );
+  const [loading, setLoading] = React.useState(false);
   const currentScan = scansHistory?.find((scan: any) => scan.id === id);
-
   if (!isLoading && !currentScan) {
     Alert.alert("Scan not found");
     router.push("/(tabs)/activities");
   }
+
+  const handleClaim = async (message: string) => {
+    setLoading(true);
+    try {
+      await supabase
+        .from("claims")
+        .insert({
+          scan_id: id,
+          message,
+        })
+        .single();
+      Alert.alert("Claim submitted successfully");
+    } catch (error: any) {
+      Alert.alert("Error submitting claim", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -104,6 +123,30 @@ const ScanDetails = () => {
               {currentScan.is_paid ? "Paid" : "Not paid"}
             </Text>
           </View>
+          <Button
+            mode="contained"
+            loading={loading}
+            onPress={() =>
+              Alert.prompt(
+                "Claim",
+                "Please enter your claim information:",
+                [
+                  {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel",
+                  },
+                  {
+                    text: "OK",
+                    onPress: (text) => handleClaim(text || ""),
+                  },
+                ],
+                "plain-text"
+              )
+            }
+          >
+            Claim
+          </Button>
         </View>
         <Image
           source={{ uri: currentScan.scan_image_url }}
