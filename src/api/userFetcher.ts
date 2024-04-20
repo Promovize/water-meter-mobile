@@ -86,3 +86,12 @@ export const getSingleLeakage = async (id: string): Promise<any> => {
   if (error) throw error;
   return data[0];
 };
+
+export const getClaims = async (): Promise<any> => {
+  const { data, error } = await supabase
+    .from("claims")
+    .select("*, scan:history(*)");
+
+  if (error) throw error;
+  return data;
+};
