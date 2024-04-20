@@ -90,7 +90,8 @@ export const getSingleLeakage = async (id: string): Promise<any> => {
 export const getClaims = async (): Promise<any> => {
   const { data, error } = await supabase
     .from("claims")
-    .select("*, scan:scan_history(*)");
+    .select("*, scan:scan_history(*)")
+    .order("created_at", { ascending: false });
 
   if (error) throw error;
   return data;
