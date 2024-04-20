@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
     paddingVertical: 10,
+    paddingBottom: 120,
   },
   claimCard: {
     backgroundColor: "white",
