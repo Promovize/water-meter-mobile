@@ -18,7 +18,7 @@ const ScanDetails = () => {
   const { user } = useAuth();
   const router = useRouter();
   const { data: scansHistory, isLoading } = useSWR(
-    user ? "history" : null,
+    user ? "scan_history" : null,
     () => getHistory(user?.id as string)
   );
   const [loading, setLoading] = React.useState(false);

@@ -29,7 +29,7 @@ export const getSingleUser = async (id: string): Promise<User> => {
 
 export const getHistory = async (userId: string): Promise<any> => {
   const { data, error } = await supabase
-    .from("history")
+    .from("scan_history")
     .select("*, meter_numbers(*)")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
@@ -90,7 +90,7 @@ export const getSingleLeakage = async (id: string): Promise<any> => {
 export const getClaims = async (): Promise<any> => {
   const { data, error } = await supabase
     .from("claims")
-    .select("*, scan:history(*)");
+    .select("*, scan:scan_history(*)");
 
   if (error) throw error;
   return data;

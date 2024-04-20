@@ -38,7 +38,7 @@ const ImageScreen = () => {
   const [paying, setPaying] = React.useState(false);
   const { imageUri } = route.params;
   const { data: scansHistory = [], mutate } = useSWR(
-    user ? "history" : null,
+    user ? "scan_history" : null,
     () => getHistory(user?.id as string)
   );
 
