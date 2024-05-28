@@ -15,21 +15,25 @@ const NewLeakageFab = (props: Props) => {
   const router = useRouter();
 
   const handlePress = async () => {
-    let result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 0.7,
-    });
-
-    if (!result.canceled) {
-      const image = result.assets[0].uri;
-
-      router.push({
-        pathname: "/(tabs)/scan/leakage-submit",
-        params: {
-          imageUri: image,
-        },
+    try {
+      let result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 0.7,
       });
+
+      if (!result.canceled) {
+        const image = result.assets[0].uri;
+
+        router.push({
+          pathname: "/(tabs)/scan/leakage-submit",
+          params: {
+            imageUri: image,
+          },
+        });
+      }
+    } catch (error) {
+      console.log;
     }
   };
   return (

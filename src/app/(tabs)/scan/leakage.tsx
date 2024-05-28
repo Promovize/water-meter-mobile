@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
-import { AutoFocus, Camera, CameraType, FlashMode } from "expo-camera";
+import { CameraView, useCameraPermissions } from "expo-camera";
 import { Button } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CamaraHeader from "@/components/camera/CamaraHeader";
@@ -9,9 +9,9 @@ import { useRouter } from "expo-router";
 
 const LeakageCameraScreen = () => {
   const [flash, setFlash] = useState(false); // [1
-  const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [permission, requestPermission] = useCameraPermissions();
   const insets = useSafeAreaInsets();
-  const cameraRef = React.useRef<Camera>(null);
+  const cameraRef = React.useRef<CameraView>(null);
   const router = useRouter();
 
   const toggleFlash = () => {
@@ -59,7 +59,7 @@ const LeakageCameraScreen = () => {
         ]}
       >
         <Text>No access to camera</Text>
-        <Button mode='contained' onPress={requestPermission}>
+        <Button mode="contained" onPress={requestPermission}>
           Request Permission
         </Button>
       </View>
@@ -68,22 +68,22 @@ const LeakageCameraScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Camera
+      <CameraView
         style={[
           styles.camera,
           {
             paddingTop,
           },
         ]}
-        type={CameraType.back}
+        facing="back"
         ref={cameraRef}
-        flashMode={flash ? FlashMode.on : FlashMode.off}
-        autoFocus={AutoFocus.on}
+        flash={flash ? "on" : "off"}
+        focusable
       >
         <CamaraHeader flashOn={flash} toggleFlash={toggleFlash} />
         {/* <CornerBorderSquare /> */}
         <CameraFooter onTakePicture={handleTakePicture} />
-      </Camera>
+      </CameraView>
     </View>
   );
 };
