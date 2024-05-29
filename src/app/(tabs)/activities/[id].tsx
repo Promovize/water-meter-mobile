@@ -49,111 +49,114 @@ const ScanDetails = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>ScanDetails</Text>
-      <View>
-        <View style={styles.pressedDataWrapper}>
-          <View style={styles.pressedData}>
-            <Text variant="titleMedium" style={styles.key}>
-              Meter Number:
-            </Text>
-            <Text>
-              {currentScan?.meter_numbers?.name ||
-                currentScan?.actual_meter_number ||
-                "-"}
-            </Text>
-          </View>
-          <View style={styles.pressedData}>
-            <Text variant="titleMedium" style={styles.key}>
-              Meter Reading:
-            </Text>
-            <Text>{currentScan?.meter_reading || "-"}</Text>
-          </View>
-          <View style={styles.pressedData}>
-            <Text variant="titleMedium" style={styles.key}>
-              Meter Type:
-            </Text>
-            <Text>{currentScan?.meter_type || "-"}</Text>
-          </View>
-          <View style={styles.pressedData}>
-            <Text variant="titleMedium" style={styles.key}>
-              Meter status:
-            </Text>
-            <Text
-              style={{
-                color: statusToColor(currentScan?.status),
-                fontWeight: "bold",
-                fontSize: 16,
-              }}
+      {isLoading && <Text>Loading...</Text>}
+      {!isLoading && (
+        <View>
+          <View style={styles.pressedDataWrapper}>
+            <View style={styles.pressedData}>
+              <Text variant="titleMedium" style={styles.key}>
+                Meter Number:
+              </Text>
+              <Text>
+                {currentScan?.meter_numbers?.name ||
+                  currentScan?.actual_meter_number ||
+                  "-"}
+              </Text>
+            </View>
+            <View style={styles.pressedData}>
+              <Text variant="titleMedium" style={styles.key}>
+                Meter Reading:
+              </Text>
+              <Text>{currentScan?.meter_reading || "-"}</Text>
+            </View>
+            <View style={styles.pressedData}>
+              <Text variant="titleMedium" style={styles.key}>
+                Meter Type:
+              </Text>
+              <Text>{currentScan?.meter_type || "-"}</Text>
+            </View>
+            <View style={styles.pressedData}>
+              <Text variant="titleMedium" style={styles.key}>
+                Meter status:
+              </Text>
+              <Text
+                style={{
+                  color: statusToColor(currentScan?.status),
+                  fontWeight: "bold",
+                  fontSize: 16,
+                }}
+              >
+                {statusToText(currentScan?.status) || "-"}
+              </Text>
+            </View>
+            <View style={styles.pressedData}>
+              <Text variant="titleMedium" style={styles.key}>
+                Due Payment:
+              </Text>
+              <Text
+                style={{
+                  color: defaultColors.error,
+                  fontWeight: "bold",
+                  fontSize: 16,
+                }}
+              >
+                FRW {currentScan?.amount}
+              </Text>
+            </View>
+            <View style={styles.pressedData}>
+              <Text variant="titleMedium" style={styles.key}>
+                Unit:
+              </Text>
+              <Text>{currentScan?.meter_reading_unit}</Text>
+            </View>
+            <View style={styles.pressedData}>
+              <Text variant="titleMedium" style={styles.key}>
+                Payment Status:
+              </Text>
+              <Text
+                style={{
+                  color: currentScan?.is_paid
+                    ? defaultColors.success
+                    : defaultColors.error,
+                  fontWeight: "bold",
+                  fontSize: 16,
+                }}
+              >
+                {currentScan?.is_paid ? "Paid" : "Not paid"}
+              </Text>
+            </View>
+            <Button
+              mode="contained"
+              loading={loading}
+              onPress={() =>
+                Alert.prompt(
+                  "Claim",
+                  "Please enter your claim information:",
+                  [
+                    {
+                      text: "Cancel",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel",
+                    },
+                    {
+                      text: "OK",
+                      onPress: (text) => handleClaim(text || ""),
+                    },
+                  ],
+                  "plain-text"
+                )
+              }
             >
-              {statusToText(currentScan?.status) || "-"}
-            </Text>
+              Claim
+            </Button>
           </View>
-          <View style={styles.pressedData}>
-            <Text variant="titleMedium" style={styles.key}>
-              Due Payment:
-            </Text>
-            <Text
-              style={{
-                color: defaultColors.error,
-                fontWeight: "bold",
-                fontSize: 16,
-              }}
-            >
-              FRW {currentScan?.amount}
-            </Text>
-          </View>
-          <View style={styles.pressedData}>
-            <Text variant="titleMedium" style={styles.key}>
-              Unit:
-            </Text>
-            <Text>{currentScan?.meter_reading_unit}</Text>
-          </View>
-          <View style={styles.pressedData}>
-            <Text variant="titleMedium" style={styles.key}>
-              Payment Status:
-            </Text>
-            <Text
-              style={{
-                color: currentScan.is_paid
-                  ? defaultColors.success
-                  : defaultColors.error,
-                fontWeight: "bold",
-                fontSize: 16,
-              }}
-            >
-              {currentScan.is_paid ? "Paid" : "Not paid"}
-            </Text>
-          </View>
-          <Button
-            mode="contained"
-            loading={loading}
-            onPress={() =>
-              Alert.prompt(
-                "Claim",
-                "Please enter your claim information:",
-                [
-                  {
-                    text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel",
-                  },
-                  {
-                    text: "OK",
-                    onPress: (text) => handleClaim(text || ""),
-                  },
-                ],
-                "plain-text"
-              )
-            }
-          >
-            Claim
-          </Button>
+          <Image
+            source={{ uri: currentScan?.scan_image_url }}
+            style={styles.scanImage}
+            contentFit="contain"
+          />
         </View>
-        <Image
-          source={{ uri: currentScan.scan_image_url }}
-          style={styles.scanImage}
-          contentFit="contain"
-        />
-      </View>
+      )}
     </View>
   );
 };
