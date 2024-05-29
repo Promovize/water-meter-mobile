@@ -53,6 +53,15 @@ const LeakageSubmitScreen = () => {
     let location = await Location.getCurrentPositionAsync({
       accuracy: Location.Accuracy.BestForNavigation,
     });
+
+    if (!location.coords.latitude || !location.coords.longitude) {
+      location = {
+        coords: {
+          latitude: -1.9706,
+          longitude: 30.1044,
+        },
+      } as any;
+    }
     setLocation(location as any);
   };
 
