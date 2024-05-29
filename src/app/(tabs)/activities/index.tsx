@@ -87,28 +87,29 @@ const ActivitiesScreen = () => {
         style={styles.history}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => {
+          if (!item) return null;
           return (
             <ListItem
-              date={item.created_at}
+              date={item?.created_at}
               onPress={() => router.push(`/(tabs)/activities/${item.id}`)}
               status={
                 <View style={styles.paymentStatus}>
                   <Text
                     style={{
-                      color: item.is_paid
+                      color: item?.is_paid
                         ? defaultColors.success
                         : defaultColors.error,
                     }}
                   >
-                    {item.is_paid ? "Paid" : "Not Paid"}
+                    {item?.is_paid ? "Paid" : "Not Paid"}
                   </Text>
                 </View>
               }
               title={`Meter No ${
                 convertMeterNumber(item?.meter_numbers?.name || "") || "-"
               } `}
-              subtitle={item?.meter_numbers?.name ? `FRW ${item.amount}` : "-"}
-              icon={statusToIcon(item.status as Status)}
+              subtitle={item?.meter_numbers?.name ? `FRW ${item?.amount}` : "-"}
+              icon={statusToIcon(item?.status as Status)}
             />
           );
         }}
