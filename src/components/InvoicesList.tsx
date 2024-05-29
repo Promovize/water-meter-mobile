@@ -45,7 +45,7 @@ const InvoicesList = () => {
             statusColor={statusToColor(item.status as InvoiceStatus)}
             title={`Meter No ${
               convertMeterNumber(
-                item.meter_numbers?.name || item.actual_meter_number || ""
+                item?.meter_numbers?.name || item.actual_meter_number || ""
               ) || "-"
             }`}
             subtitle={`FRW ${item.amount}`}

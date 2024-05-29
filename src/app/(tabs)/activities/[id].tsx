@@ -56,8 +56,8 @@ const ScanDetails = () => {
               Meter Number:
             </Text>
             <Text>
-              {currentScan.meter_numbers?.name ||
-                currentScan.actual_meter_number ||
+              {currentScan?.meter_numbers?.name ||
+                currentScan?.actual_meter_number ||
                 "-"}
             </Text>
           </View>

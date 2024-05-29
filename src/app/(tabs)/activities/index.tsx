@@ -105,9 +105,9 @@ const ActivitiesScreen = () => {
                 </View>
               }
               title={`Meter No ${
-                convertMeterNumber(item.meter_numbers?.name || "") || "-"
+                convertMeterNumber(item?.meter_numbers?.name || "") || "-"
               } `}
-              subtitle={item.meter_numbers?.name ? `FRW ${item.amount}` : "-"}
+              subtitle={item?.meter_numbers?.name ? `FRW ${item.amount}` : "-"}
               icon={statusToIcon(item.status as Status)}
             />
           );
